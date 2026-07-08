@@ -210,7 +210,8 @@ Copy block template trong file đó, điền: tool, ngày giờ, prompt nguyên 
 
 ### FR02-Mobile — Expo Go
 - Chạy lại đúng bảng boundary của FR02 nhưng thao tác trên màn hình Login của app.
-- Trọng tâm khác biệt: app hiển thị **cùng 1 câu lỗi chung** cho cả "sai mật khẩu" lẫn "bị khóa" → mở song song web (hoặc DevTools network) để đối chiếu message gốc backend. Đây là bug mobile-specific.
+- ⚠️ **Đã xác minh code:** cả web (`Login.jsx:18`) lẫn mobile (`App.js:205`) đều nuốt message backend và hiện cùng câu "Đăng nhập thất bại. Vui lòng kiểm tra lại." → bug "không cho biết đang bị khóa" xuất hiện ở **cả 2 client**. Muốn xem message gốc backend phải dùng DevTools Network trên web (quan sát response JSON) — không lấy được từ text UI.
+- Giá trị của Feature D vì vậy là **cross-platform confirmation**: chứng minh 2 bug backend + bug che thông báo tái lập y hệt trên client thứ 2 → kết luận lỗi nằm ở backend/pattern client, không phải ngẫu nhiên 1 nền tảng.
 - Không copy nguyên văn báo cáo FR02 web — trình bày dạng **cross-check** + phần riêng mobile.
 
 ---
