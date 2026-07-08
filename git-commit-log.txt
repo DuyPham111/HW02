@@ -1,0 +1,3 @@
+# Sinh file này ở bước đóng gói bằng lệnh (chạy trong thư mục HW02-Submission):
+#   git log --pretty=format:"%h | %ad | %s" --date=format:"%Y-%m-%d %H:%M" > git-commit-log.txt
+# (Dòng comment này sẽ bị ghi đè khi chạy lệnh.)

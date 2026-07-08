@@ -1,0 +1,9 @@
+Video demo Agent Skills (YouTube):
+- Video 1 (skill end-to-end trên FR-09): [dán link]
+
+Nội dung nên quay (~5-10 phút):
+1. Mở file skill, giải thích 30 giây.
+2. Dán prompt Bước 1 của skill vào AI với spec + code FR-09.
+3. Cho xem output AI → chỉ ra 1 chỗ mình phải sửa (human review).
+4. Chạy 1-2 TC trên trang Checkout → thấy bug (vd đơn = min bị từ chối).
+5. Điền kết quả vào file execution + commit.
