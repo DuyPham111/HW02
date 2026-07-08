@@ -87,25 +87,30 @@
 
 ### Bước 3 — Domains
 
-<!-- Điền: mỗi biến 3 cột. Gợi ý:
-     email: valid = đã đăng ký; invalid = chưa đăng ký, sai định dạng; special = rỗng, whitespace, SQLi
-     password: valid = đúng; invalid = sai; special = rỗng, ký tự đặc biệt/Unicode
-     login_attempts: valid = 0..2; invalid(khóa) = >= 3 theo spec; special = null
-     locked_until: valid = null / đã quá hạn; invalid = còn hiệu lực -->
+> AI Output — **chờ kiểm chứng bằng thực thi** (Bước 6 dưới đây chỉ chạy thật mới biết Actual).
 
 | Biến | Valid Domain | Invalid Domain | Special |
 |------|--------------|----------------|---------|
-| `email` | | | |
-| `password` | | | |
-| `login_attempts` | | | |
-| `locked_until` | | | |
+| `email` | Email đã đăng ký trong DB (`test@eshop.com`) | Email chưa đăng ký (`ghost@eshop.com`); email sai định dạng (`abc`, `abc@`, `abc@com`) | Rỗng (`""`); chỉ khoảng trắng (`"   "`); có khoảng trắng đầu/cuối (`" test@eshop.com "`); chuỗi SQL injection (`' OR 1=1--`) |
+| `password` | Đúng mật khẩu của user (`Test1234!`) | Sai mật khẩu (`Wrong123!`) | Rỗng (`""`); rất dài (500 ký tự); ký tự đặc biệt/Unicode (`Mật_khẩu@123`) |
+| `login_attempts` (ẩn) | 0, 1, 2 (theo spec — chưa đủ ngưỡng khóa) | ≥ 3 (theo spec — phải khóa) | — |
+| `locked_until` (ẩn) | `null`, hoặc thời điểm đã trôi qua | Thời điểm còn hiệu lực (tương lai) | — |
 
 ### Bước 4 — Equivalence Partitions
 
 | EP-ID | Loại vùng | Biến | Mô tả | Giá trị đại diện |
 |-------|-----------|------|-------|------------------|
-| EP-FR02-01 | Hợp lệ | | | |
-| EP-FR02-02 | Không hợp lệ | | | |
+| EP-FR02-01 | Hợp lệ | email | Email đã đăng ký | `test@eshop.com` |
+| EP-FR02-02 | Không hợp lệ | email | Email chưa đăng ký (đúng định dạng) | `ghost@eshop.com` |
+| EP-FR02-03 | Không hợp lệ | email | Email sai định dạng | `abc-khong-phai-email` |
+| EP-FR02-04 | Đặc biệt | email | Email rỗng | `""` |
+| EP-FR02-05 | Hợp lệ | password | Mật khẩu đúng | `Test1234!` |
+| EP-FR02-06 | Không hợp lệ | password | Mật khẩu sai | `Wrong123!` |
+| EP-FR02-07 | Đặc biệt | password | Mật khẩu rỗng | `""` |
+| EP-FR02-08 | Hợp lệ | login_attempts | Chưa đạt ngưỡng khóa (theo spec) | attempts ∈ {0,1,2} |
+| EP-FR02-09 | Không hợp lệ (theo spec) | login_attempts | Đã đạt ngưỡng khóa | attempts ≥ 3 |
+| EP-FR02-10 | Hợp lệ | locked_until | Không bị khóa | `null` hoặc đã hết hạn |
+| EP-FR02-11 | Không hợp lệ | locked_until | Đang bị khóa | thời điểm tương lai |
 
 ### Bước 5 — Constraints (ràng buộc chéo / nghiệp vụ)
 
@@ -116,19 +121,26 @@
 | C-FR02-03 | Sai ≥ 3 lần liên tiếp → khóa 30 giây | business rule |
 | C-FR02-04 | Ô email `type="email"`, ô mật khẩu `type="password"` | GUI rule |
 | C-FR02-05 | Người dùng bị khóa phải nhận thông báo bị khóa (khác câu sai mật khẩu) | business rule |
+| C-FR02-06 | Tài khoản đang bị khóa (EP-FR02-11) thì dù `password` đúng (EP-FR02-05) vẫn phải bị từ chối | dependency (state override credential) |
 
 ### Bước 6 — Test Cases (Domain)
 
-*Mặc định các biến còn lại giữ giá trị hợp lệ (single-fault). Mọi TC thao tác từ trang Đăng nhập.*
+*Mặc định các biến còn lại giữ giá trị hợp lệ (single-fault). Mọi TC thao tác từ trang Đăng nhập http://localhost:5173/login. Cột Actual/Pass-Fail/Bug-ID để trống — chỉ điền sau khi CHẠY THẬT (mục 3. Test Execution).*
 
 | TC-ID | Mô tả | Input / thao tác trên UI | Expected (SRS) | EP/Constraint | Actual | Pass/Fail | Bug-ID |
 |-------|-------|--------------------------|----------------|---------------|--------|-----------|--------|
-| FR02-DT-01 | Happy path | | | | | | |
-| FR02-DT-02 | | | | | | | |
+| FR02-DT-01 | Đăng nhập thành công (happy path) | `test@eshop.com` / `Test1234!`, bấm "Sign In" | Đăng nhập thành công, vào trang chủ, nhận JWT | EP-01, EP-05, EP-08, EP-10 | | | |
+| FR02-DT-02 | Email chưa đăng ký | `ghost@eshop.com` / `Test1234!` | Từ chối, thông báo lỗi chung (không nói rõ "email không tồn tại") | EP-02, C-FR02-05 | | | |
+| FR02-DT-03 | Email sai định dạng | `abc-khong-phai-email` / `Test1234!`, bấm "Sign In" | Client chặn (nếu có HTML5 validate) hoặc server từ chối | EP-03, C-FR02-04 | | | |
+| FR02-DT-04 | Email bỏ trống | để trống ô email, nhập password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-04 | | | |
+| FR02-DT-05 | Sai mật khẩu, lần đầu tiên | `test@eshop.com` / `Wrong123!` (tài khoản mới reset, attempts=0) | Từ chối; theo spec: `login_attempts` tăng lên **1**; tài khoản CHƯA bị khóa | EP-06, EP-08, C-FR02-02 | | | |
+| FR02-DT-06 | Mật khẩu bỏ trống | nhập email đúng, để trống password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-07 | | | |
+| FR02-DT-07 | Đăng nhập khi tài khoản đang bị khóa, dù mật khẩu ĐÚNG | Làm sai liên tục cho đến khi bị khóa, sau đó thử lại với `Test1234!` (đúng) | Vẫn bị từ chối; thông báo phải nói rõ "tài khoản đang bị khóa" (khác câu sai mật khẩu) | EP-05, EP-11, C-FR02-06, C-FR02-05 | | | |
+| FR02-DT-08 | Đăng nhập đúng sau khi đã có vài lần sai (nhưng CHƯA bị khóa) | Sai 1 lần, sau đó đăng nhập đúng `Test1234!` | Đăng nhập thành công; bộ đếm reset về 0 | EP-05, EP-08, C-FR02-01 | | | |
 
 ### Tóm tắt coverage
 
-- Số EP: — Số TC: — EP chưa cover:
+- Số EP: 11 — Số TC: 8 — EP chưa cover: EP-FR02-09 (được phủ gián tiếp qua TC-07, và trực tiếp hơn ở BVA Bước 3 dưới)
 
 ---
 
@@ -143,29 +155,44 @@
 
 ### Bước 2 — BVA Points
 
-<!-- Gợi ý: attempts 1 / 2 / 3 / 4 (on-point tại 3 theo spec — biên thật sẽ lộ tại 2 do bug +2);
-     thời gian 29s / 30s / 31s (đo bằng đồng hồ; thực tế dự đoán ~180s) -->
+> AI Output — giá trị "Expected" theo SPEC; giá trị thật (Actual) chỉ có sau khi chạy (Bước 3 dưới + mục 3. Test Execution). Dự đoán trước khi chạy (dựa trên đã đọc code ở Domain Bước 1): do bug `+2`, biên THẬT sẽ lộ ra ở lần sai thứ **2**, không phải thứ 3; thời gian khóa THẬT dự đoán ~180s (3 phút), không phải 30s.
 
 | Point | Biến | Giá trị | Quan hệ biên |
 |-------|------|---------|--------------|
-| P-01 | `login_attempts` | | |
+| P-01 | `login_attempts` | 1 | min (mới sai 1 lần) |
+| P-02 | `login_attempts` | 2 | in (giữa vùng hợp lệ, chưa khóa) |
+| P-03 | `login_attempts` | 3 | **on-point** (đúng ngưỡng spec — quan trọng nhất) |
+| P-04 | `login_attempts` | 4 | off-point (vượt ngưỡng, đã phải khóa từ trước) |
+| P-05 | Thời gian sau khi khóa | 29 giây | off (trước khi hết hạn khóa — vẫn phải khóa) |
+| P-06 | Thời gian sau khi khóa | 30 giây | **on-point** (đúng ngưỡng spec — vừa hết hạn khóa) |
+| P-07 | Thời gian sau khi khóa | 31 giây | off (sau khi hết hạn khóa — phải mở) |
 
 ### Bước 3 — Test Cases (BVA)
 
+*Reset DB (`node database.js`) trước khi bắt đầu chuỗi test đếm số lần sai — vì `login_attempts` là state lưu trong DB, không reset thì kết quả bị nhiễu bởi lần chạy trước.*
+
 | TC-ID | Input / thao tác trên UI | Boundary | Expected (SRS) | Actual | Pass/Fail | Bug-ID |
 |-------|--------------------------|----------|----------------|--------|-----------|--------|
-| FR02-BV-01 | | | | | | |
+| FR02-BV-01 | Sai mật khẩu lần thứ 1 (`test@eshop.com` / `Wrong123!`) | P-01 (attempts=1) | Từ chối; `login_attempts` = 1; **chưa** bị khóa | | | |
+| FR02-BV-02 | Sai mật khẩu lần thứ 2 (liên tiếp) | P-02 (attempts=2) | Từ chối; `login_attempts` = 2; **chưa** bị khóa | | | |
+| FR02-BV-03 | Sai mật khẩu lần thứ 3 (liên tiếp) | P-03 — on-point | Từ chối; **bị khóa ngay** (403), thông báo "tài khoản đã bị khóa" | | | |
+| FR02-BV-04 | Thử đăng nhập (mật khẩu đúng hoặc sai) ngay sau lần sai thứ 3 | P-04 (attempts=4, đã khóa từ P-03) | Vẫn bị từ chối vì đang trong thời gian khóa | | | |
+| FR02-BV-05 | Sau khi bị khóa ở BV-03, đợi đúng 29 giây rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-05 | Vẫn bị từ chối — còn 1 giây nữa mới hết hạn khóa | | | |
+| FR02-BV-06 | Đợi đến giây thứ 30 (tính từ lúc bị khóa) rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-06 — on-point | Đăng nhập **thành công**, bộ đếm reset về 0 | | | |
+| FR02-BV-07 | Đợi đến giây thứ 31 rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-07 | Đăng nhập thành công (đã chắc chắn hết hạn khóa) | | | |
 
 ### Bước 4 — Robust / Edge (bổ sung)
 
 | TC-ID | Input | Ghi chú |
 |-------|-------|---------|
 | FR02-BV-R01 | email + password đều rỗng | HTML5 `required` chặn? |
-| FR02-BV-R02 | email có khoảng trắng thừa `"  test@eshop.com  "` | |
+| FR02-BV-R02 | email có khoảng trắng thừa `"  test@eshop.com  "` | Server có tự trim trước khi so khớp DB không? |
+| FR02-BV-R03 | email = `' OR 1=1--` | Kiểm tra SQL injection có gây lỗi 500 hay bị chặn an toàn |
+| FR02-BV-R04 | password rất dài (500 ký tự) | Kiểm tra không bị crash/treo |
 
 ### Tóm tắt
 
-- Số boundary: — Số TC: — Fail:
+- Số boundary: 2 (ngưỡng số lần sai; ngưỡng thời gian khóa) — Số TC: 11 (7 BVA chính + 4 robust) — Fail: [điền sau khi thực thi]
 
 ---
 

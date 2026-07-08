@@ -30,7 +30,14 @@
 - **AI Output:** Phân tích 2 bài cùng lớp (cùng bộ format: Domain 6 bước có Input Variables ID / Domains / EP-ID / Constraints / TC có cột truy vết + Actual-Pass/Fail-BugID, BVA 4 bước có B-ID / BVA Points / Robust, metrics per feature, 1 Main_Report hợp nhất, Bug_Report block, skills dạng SKILL.md). Tái cấu trúc bài nộp theo format đó: gộp per-feature files vào `reports/Main_Report.md` (4 chương), viết lại `reports/Bug_Report.md`, chuyển 3 skill sang `skills/*/SKILL.md` có frontmatter, cập nhật guide/README. Nội dung Bước 1 FR-02 đã kiểm chứng code được giữ nguyên khi chuyển.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã đọc lại cấu trúc mới, xác nhận không copy nguyên văn câu chữ/prompt của 2 bạn — chỉ dùng chung khung trình bày kỹ thuật.]
 
-### [LOG-004] — [...]
+### [LOG-004] — FR02 Bước 3-6 (Domain) + toàn bộ BVA — AI sinh test case lần đầu
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** "nhưng ở mỗi fr tôi chưa thấy bạn tạo test case cho tôi mà chỉ toàn spec" (sau khi hỏi lại giải thích quy trình) — yêu cầu AI thực sự áp dụng skill `hw02-domain-testing` và `hw02-bva` để sinh test case cụ thể cho FR-02, không chỉ để khung template trống.
+- **AI Output:** Domains (4 biến, gồm 2 biến ẩn) → 11 Equivalence Partitions (EP-FR02-01..11) → 6 Constraints (thêm C-FR02-06 mới: trạng thái khóa phải override cả khi mật khẩu đúng) → 8 Domain Test Cases (FR02-DT-01..08, single-fault). BVA: 7 BVA points (on-point tại attempts=3 và tại 30s theo spec) → 7 BVA test cases (FR02-BV-01..07) → 4 robust case (rỗng, whitespace, SQLi, input dài). Toàn bộ cột Expected viết THEO SPEC; cột Actual/Pass-Fail để trống chờ chạy thật. AI có dự đoán trước (ghi rõ là dự đoán, không phải Actual) rằng biên thật sẽ lệch ở attempts=2 và ~180s dựa trên phân tích code đã làm ở LOG-002.
+- **Human Review Notes:** [SINH VIÊN ĐIỀN SAU KHI CHẠY THẬT: kiểm tra từng EP có bị trùng nghĩa không, từng TC có Expected rõ ràng không, rồi mới chạy để điền Actual — không được điền Actual bằng dự đoán của AI.]
+
+### [LOG-005] — [...]
 - **Tool:**
 - **Date & Time:**
 - **Prompt:**
