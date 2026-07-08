@@ -37,7 +37,14 @@
 - **AI Output:** Domains (4 biến, gồm 2 biến ẩn) → 11 Equivalence Partitions (EP-FR02-01..11) → 6 Constraints (thêm C-FR02-06 mới: trạng thái khóa phải override cả khi mật khẩu đúng) → 8 Domain Test Cases (FR02-DT-01..08, single-fault). BVA: 7 BVA points (on-point tại attempts=3 và tại 30s theo spec) → 7 BVA test cases (FR02-BV-01..07) → 4 robust case (rỗng, whitespace, SQLi, input dài). Toàn bộ cột Expected viết THEO SPEC; cột Actual/Pass-Fail để trống chờ chạy thật. AI có dự đoán trước (ghi rõ là dự đoán, không phải Actual) rằng biên thật sẽ lệch ở attempts=2 và ~180s dựa trên phân tích code đã làm ở LOG-002.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN SAU KHI CHẠY THẬT: kiểm tra từng EP có bị trùng nghĩa không, từng TC có Expected rõ ràng không, rồi mới chạy để điền Actual — không được điền Actual bằng dự đoán của AI.]
 
-### [LOG-005] — [...]
+### [LOG-005] — Sinh sẵn test case cụ thể cho cả 4 feature + nâng cấp Bug_Report
+- **Tool:** Claude Code (Fable 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** "Hãy giúp tôi tham khảo bài làm mới này [SoftwareTesting_HW02] … chắt lọc tinh túy … kết hợp các bài làm trước đó (có image) thiết kế lại … thầy tôi cho phép hỗ trợ sinh testcase nên hãy chỉnh sửa lại các prompt để … sinh sẵn testcase cho tôi test và chụp ảnh bỏ vào"
+- **AI Output:** (1) Phân tích bài mẫu mới (format bug table giàu thông tin Pre/Steps/Expected/Actual/Env/Severity, domain 4 bước gọn, nhưng THIẾU ảnh). (2) Sinh sẵn test case cụ thể (giá trị input + thao tác UI + Expected theo spec, Actual để trống) cho FR-09 (9 DT + 7 BVA + 3 robust), FR-15 (8 DT + 5 BVA + 2 robust), FR-02 Mobile (5 DT + 4 BVA). (3) Kiểm tra admin UI: phát hiện admin chặn user thường đăng nhập (`App.jsx:65`) → bug access control FR-15 (R5) chỉ chạm được từ API, **loại khỏi TC UI**, chuyển sang Gap Analysis. (4) Nâng cấp `Bug_Report.md` sang bảng Defect giàu thông tin NHƯNG giữ cột Screenshot + GitHub Issue. (5) Sinh chuỗi 255/256 ký tự sẵn (`reports/test-data-helpers.md`). (6) Cập nhật 2 skill cho phép sinh test case cụ thể; cập nhật guide (bước 1–3 AI đã điền, bạn tập trung bước 4–6).
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã đọc lại toàn bộ test case sinh sẵn; xác nhận Expected khớp spec; chưa chạy nên chưa có Actual. Lưu ý: mọi cột "dự đoán" trong báo cáo là suy luận từ code, KHÔNG được chép thành Actual — phải tự chạy trên UI.]
+
+### [LOG-006] — [...]
 - **Tool:**
 - **Date & Time:**
 - **Prompt:**

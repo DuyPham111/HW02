@@ -12,6 +12,7 @@ description: >-
 
 - Chạy SAU khi đã có domain model (skill `hw02-domain-testing`).
 - **On-point là bắt buộc** — giá trị đúng bằng biên là nơi bug off-by-one (`>` vs `>=`) lộ ra.
+- **Được phép sinh test case cụ thể** (giảng viên cho phép): điền sẵn giá trị biên + thao tác UI + Expected; Actual/Pass-Fail để trống cho sinh viên chạy.
 - Expected theo spec; biên "thật" của implementation chỉ được kết luận sau khi đo/chạy thật.
 - UI-first: nếu giá trị biên khó tạo từ UI, chuẩn bị dữ liệu bằng chính UI (vd tạo product mồi giá đúng biên bằng admin UI).
 

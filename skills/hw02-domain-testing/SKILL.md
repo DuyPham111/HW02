@@ -12,6 +12,7 @@ description: >-
 
 - Domain Testing = xác định **miền đầu vào** → **phân vùng tương đương** → **ràng buộc chéo** → chọn TC phủ hết vùng + ràng buộc. Phải trình bày từng bước, không chỉ liệt kê TC.
 - **UI-first:** mọi TC phải thao tác được từ giao diện (web/mobile). DevTools chỉ để quan sát response làm bằng chứng.
+- **Được phép sinh test case cụ thể** (giảng viên cho phép): AI điền sẵn giá trị input cụ thể, các bước thao tác UI, và Expected — để sinh viên chạy ngay và chụp ảnh. Nhưng **Actual/Pass-Fail để trống**, sinh viên tự chạy điền.
 - Expected LUÔN theo **spec (SRS)**; Actual chỉ điền sau khi thực thi thật.
 - Sau mỗi bước: con người review, sửa, ghi log vào `AI_Audit_Report.md`, rồi mới commit.
 

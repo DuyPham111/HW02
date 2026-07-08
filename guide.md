@@ -63,16 +63,25 @@ Quy ước commit (1 step = 1 commit): `[FR02][domain]`, `[FR02][bva]`, `[FR02][
 
 ## 3. Quy trình mỗi feature (điền vào chương tương ứng trong `reports/Main_Report.md`)
 
-> Chu trình mỗi bước: **prompt AI (theo SKILL.md) → tự review/kiểm chứng → sửa → điền vào Main_Report → ghi log AI_Audit → commit.**
+> **QUAN TRỌNG — test case đã được AI sinh sẵn.** Thầy cho phép AI hỗ trợ sinh test case, nên phần
+> **Domain (Bước 1–6) và BVA của cả 4 feature đã điền đầy đủ giá trị cụ thể** trong `Main_Report.md`
+> (cột Expected theo spec; cột **Actual/Pass-Fail để trống**). Việc chính của bạn giờ là **BƯỚC 4–6**:
+> chạy thật từng TC trên UI → điền Actual → chụp ảnh → viết bug. Bước 1–3 chỉ cần **đọc lại & kiểm chứng**,
+> không phải viết từ đầu.
 
-| # | Bước | Điền vào mục | Skill dùng | Commit |
-|---|------|--------------|-----------|--------|
-| 1 | Business Analysis (spec-vs-code) + kiểm chứng tay trên UI | `1. Domain Testing → Bước 1` | `hw02-spec-vs-code` | `[FRxx][domain] Add business analysis (spec vs code, verified on UI)` |
-| 2 | Input Variables → Domains → EP → Constraints → TC domain | `Bước 2 → Bước 6` + coverage | `hw02-domain-testing` | `[FRxx][domain] Add domain model and domain test cases` |
-| 3 | Boundaries → BVA Points → TC BVA → Robust | `2. BVA` cả 4 bước | `hw02-bva` | `[FRxx][bva] Add boundary value analysis test cases` |
-| 4 | Thực thi TOÀN BỘ TC trên UI, điền Actual/Pass/Fail vào bảng TC + bảng Execution + Metrics | `3. Test Execution` (+ cột Actual ở mục 1–2) | — (thủ công!) | `[FRxx][exec] Add execution results (X pass / Y fail)` |
-| 5 | Bug report + GitHub Issues | `reports/Bug_Report.md` | — | `[FRxx][bug] Report BUG-FRxx-001..N with GitHub issues` |
-| 6 | AI Gap Analysis | `4. AI Gap Analysis` | — | `[FRxx][gap] Add AI gap analysis` |
+| # | Bước | Trạng thái | Việc của bạn |
+|---|------|-----------|--------------|
+| 1 | Business Analysis (spec-vs-code) | ✅ AI đã điền | Đọc lại; chạy checklist kiểm chứng tay (cuối Bước 1 mỗi chương) để xác nhận code-vs-spec đúng |
+| 2 | Domain: Input/Domains/EP/Constraints/TC | ✅ AI đã điền | Đọc lại, kiểm tra TC có hợp lý không; sửa nếu thấy sai |
+| 3 | BVA: Boundaries/Points/TC/Robust | ✅ AI đã điền | Đọc lại |
+| 4 | **Thực thi TOÀN BỘ TC trên UI** | ⬜ **BẠN LÀM** | Chạy từng TC, điền cột Actual + Pass/Fail, chụp ảnh mọi ca Fail |
+| 5 | Bug report + GitHub Issues | ⬜ **BẠN LÀM** | Xác nhận bug thật, điền Actual vào `Bug_Report.md`, tạo Issue + ảnh |
+| 6 | AI Gap Analysis + Metrics | ⬜ **BẠN LÀM** | Điền bảng Metrics; viết gap (gợi ý có sẵn trong comment) |
+
+**Commit tương ứng:** `[FRxx][exec] Add execution results`, `[FRxx][bug] Report bugs with issues`, `[FRxx][gap] Add AI gap analysis`.
+
+> Nếu muốn AI sinh lại/bổ sung test case: dùng skill trong `skills/` (đã cho phép sinh giá trị cụ thể).
+> Luôn **tự chạy để xác nhận** trước khi tin — AI chỉ đoán Expected, không biết Actual.
 
 **Nguyên tắc thực thi (bước 4):**
 - Reset DB trước kịch bản có state. Actual ghi **nguyên văn** text trên UI + số liệu đo.
@@ -88,7 +97,7 @@ Quy ước commit (1 step = 1 commit): `[FR02][domain]`, `[FR02][bva]`, `[FR02][
 ## 4. Chụp screenshot đúng cách
 
 - Chụp **màn hình app thật** thể hiện lỗi (không chụp text mô tả/code). Khung hình thấy: URL/màn hình + dữ liệu nhập + kết quả sai.
-- Tên file: `BUG-FRXX-00N.png` trong thư mục `reports/FR-XX_bugs/`. `Win+Shift+S`.
+- Tên file: `B00N.png` (khớp Defect ID trong `Bug_Report.md`) trong thư mục `reports/FR-XX_bugs/`. `Win+Shift+S`.
 - Lỗi khóa tài khoản: chụp kèm đồng hồ/timestamp để chứng minh thời gian.
 - Mobile: chụp màn hình điện thoại; quay thêm video ngắn chuỗi "sai lần 1 → 2 → khóa" (bằng chứng + tư liệu video demo). Video: để file `.mov/.mp4` trong thư mục bugs + 1 ảnh preview (PDF không nhúng video).
 
