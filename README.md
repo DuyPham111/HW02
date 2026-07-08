@@ -22,13 +22,13 @@
 
 | File / thư mục | Nội dung |
 |---|---|
-| `Main_Report_Full.md` / `.pdf` | Báo cáo chính: Domain Testing + BVA cả 4 feature |
-| `bug-report.md` | Toàn bộ bug + screenshot + link GitHub Issues |
-| `ai-audit-report.md` / `.pdf` | AI Audit Report (bắt buộc) |
-| `ai-critique.md` / `.pdf` | AI Critique 200–300 từ (bắt buộc) |
-| `git-commit-log.txt` | Git log (1 step = 1 commit) |
-| `features/` | Báo cáo chi tiết từng feature (4 file/feature) |
-| `agent-skills/` | 3 Agent Skills + link video demo |
+| `reports/Main_Report.md` / `.pdf` | Báo cáo chính: 4 chương feature — Domain Testing (6 bước) + BVA (4 bước) + Execution + AI Gap |
+| `reports/Bug_Report.md` / `.pdf` | Bug hợp nhất: 1 block/bug + ảnh + link GitHub Issues |
+| `reports/AI_Audit_Report.md` / `.pdf` | AI Audit Report (bắt buộc) |
+| `reports/AI_Critique.md` / `.pdf` | AI Critique 200–300 từ (bắt buộc) |
+| `reports/git_commit_log.txt` | Git log (1 step = 1 commit) |
+| `reports/FR-XX_bugs/` | Ảnh/video bằng chứng bug theo feature |
+| `skills/` | 3 Agent Skills (SKILL.md) + link video demo |
 
 ## 3. Test Summary Report
 
