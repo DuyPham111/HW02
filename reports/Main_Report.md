@@ -536,7 +536,7 @@
 | FR15-DT-05 | Giá bằng 0 | name=`SP gia 0`, price=`0`, Lưu | Từ chối (giá phải > 0) | EP-06 / R2 | **Tạo thành công** — sản phẩm hiện trong danh sách với giá "0 đ" | **Fail** | B009 |
 | FR15-DT-06 | Giá âm | name=`SP gia am`, price=`-1`, Lưu | Từ chối (giá phải > 0) | EP-07 / R2 | **Tạo thành công** — sản phẩm hiện trong danh sách với giá "-1 đ" | **Fail** | B009 |
 | FR15-DT-07 | Giá rỗng | name=`SP khong gia`, để trống price, Lưu | Từ chối (giá bắt buộc) | EP-08 / R2 | **Tạo thành công** — sản phẩm hiện trong danh sách với giá trống (chỉ hiện "đ") | **Fail** | B009 |
-| FR15-DT-08 | Sửa 1 sản phẩm, kiểm tra sản phẩm khác | Sửa giá 1 sản phẩm → Lưu → xem các sản phẩm khác | Chỉ sản phẩm được sửa thay đổi | EP-05 / C-02 | | | |
+| FR15-DT-08 | Sửa 1 sản phẩm, kiểm tra sản phẩm khác | Sửa giá/ảnh/mô tả/category 1 sản phẩm → Lưu → xem các sản phẩm khác + xem lại chính sản phẩm vừa sửa | Chỉ sản phẩm được sửa thay đổi; các trường khác cập nhật đúng | EP-05 / C-02 | **2 lỗi nghiêm trọng:** (1) Sau khi sửa, giá/ảnh/mô tả/category hiển thị vẫn là giá trị CŨ dù alert báo "Cập nhật thành công!" — chỉ đúng sau khi F5 tải lại trang; (2) TẤT CẢ sản phẩm khác đều bị đổi tên theo tên sản phẩm vừa sửa — chỉ trở lại bình thường sau khi F5. Nguyên nhân: `handleProductSubmit` nhánh sửa (`App.jsx:108–116`) không gọi `fetchData()` mà tự dựng mảng `fakeMassUpdatedProducts = products.map(p => ({...p, name: productForm.name}))` — gán `name` của SP đang sửa cho MỌI sản phẩm, đồng thời các trường khác giữ giá trị CŨ (spread `...p`) thay vì lấy dữ liệu mới. Backend (`PUT /api/products/:id`) lưu đúng, dữ liệu KHÔNG hỏng thật trong DB — chỉ là lỗi hiển thị phía client. | **Fail** | B017 |
 
 ### Tóm tắt coverage
 
