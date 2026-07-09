@@ -57,21 +57,21 @@
 
 **Quan sát UI bổ sung trên trang Đăng nhập** (trái FR-21/FR-22, quan sát được ngay trong feature này):
 
-| Quan sát | Code | Spec liên quan |
-|---|---|---|
-| Ô mật khẩu `type="text"` → **mật khẩu hiển thị rõ** khi gõ | `Login.jsx:40` | FR-22: phải `type="password"` |
-| Tiêu đề trang Đăng nhập ghi "Đăng Ký" | `Login.jsx:24` | FR-21 |
-| Label "Username" thay vì "Email"; nút "Sign In" (tiếng Anh) | `Login.jsx:28,58` | FR-21 nhất quán ngôn ngữ |
-| Thông báo lỗi hiển thị **dưới** nút submit | `Login.jsx:66` | FR-22: lỗi phải nằm **trên** nút submit |
-| 2 ô input có `required` → bỏ trống bị trình duyệt chặn | `Login.jsx:34,44` | ảnh hưởng partition "rỗng" |
+| Quan sát | Code | Spec liên quan | Kiểm chứng thực tế |
+|---|---|---|---|
+| Ô mật khẩu `type="text"` → **mật khẩu hiển thị rõ** khi gõ | `Login.jsx:40` | FR-22: phải `type="password"` | ✅ **CONFIRMED** — chụp 2026-07-09, thấy rõ `Test1234!` khi gõ → `B004.png` |
+| Tiêu đề trang Đăng nhập ghi "Đăng Ký" | `Login.jsx:24` | FR-21 | ✅ **CONFIRMED** — trang `/login` hiển thị tiêu đề "Đăng Ký" → bug mới, xem `B012` |
+| Label "Username" thay vì "Email"; nút "Sign In" (tiếng Anh) | `Login.jsx:28,58` | FR-21 nhất quán ngôn ngữ | ✅ quan sát thấy trong cùng ảnh `B012`, gộp chung 1 bug với tiêu đề |
+| Thông báo lỗi hiển thị **dưới** nút submit | `Login.jsx:66` | FR-22: lỗi phải nằm **trên** nút submit | chưa kiểm |
+| 2 ô input có `required` → bỏ trống bị trình duyệt chặn | `Login.jsx:34,44` | ảnh hưởng partition "rỗng" | chưa kiểm |
 
 **Checklist kiểm chứng bằng tay trên UI (làm trước khi thực thi chính thức):**
 
-- [ ] Reset DB (`node database.js`) → đăng nhập sai bằng `test@eshop.com`: đếm số lần đến khi bị khóa (dự đoán: 2), chụp màn hình từng lần
+- [x] Reset DB (`node database.js`) → đăng nhập sai bằng `test@eshop.com`: đếm số lần đến khi bị khóa → **XÁC NHẬN: khóa (HTTP 403) ngay tại lần thứ 3** (sớm hơn 1 lần so với đúng thiết kế +1/lần — xem giải thích chi tiết ở BVA Bước 3), 2026-07-09
 - [ ] Ngay khi khóa: đăng nhập với mật khẩu **đúng** → vẫn bị chặn? Ghi nguyên văn câu hiển thị
 - [ ] Bấm giờ: thử mật khẩu đúng ở mốc ~30s và ~3 phút → ghi thời điểm vào lại được
-- [ ] Nhập email `abc` → form có bị HTML5 chặn không? (dự đoán: không)
-- [ ] Gõ mật khẩu → ký tự hiện rõ? Chụp màn hình
+- [x] Nhập email `abc` → form có bị HTML5 chặn không? (dự đoán: không) → **XÁC NHẬN: KHÔNG chặn**, gửi thẳng, hiện lỗi chung "Đăng nhập thất bại. Vui lòng kiểm tra lại." (2026-07-09, `B005.png`)
+- [x] Gõ mật khẩu → ký tự hiện rõ? Chụp màn hình → **XÁC NHẬN: hiện rõ**, không che (2026-07-09, `B004.png`)
 - [ ] F12 → Network → request `login`: đối chiếu status 401/403 + JSON `error` với text UI
 
 ### Bước 2 — Input Variables
@@ -129,12 +129,12 @@
 
 | TC-ID | Mô tả | Input / thao tác trên UI | Expected (SRS) | EP/Constraint | Actual | Pass/Fail | Bug-ID |
 |-------|-------|--------------------------|----------------|---------------|--------|-----------|--------|
-| FR02-DT-01 | Đăng nhập thành công (happy path) | `test@eshop.com` / `Test1234!`, bấm "Sign In" | Đăng nhập thành công, vào trang chủ, nhận JWT | EP-01, EP-05, EP-08, EP-10 | | | |
-| FR02-DT-02 | Email chưa đăng ký | `ghost@eshop.com` / `Test1234!` | Từ chối, thông báo lỗi chung (không nói rõ "email không tồn tại") | EP-02, C-FR02-05 | | | |
-| FR02-DT-03 | Email sai định dạng | `abc-khong-phai-email` / `Test1234!`, bấm "Sign In" | Client chặn (nếu có HTML5 validate) hoặc server từ chối | EP-03, C-FR02-04 | | | |
-| FR02-DT-04 | Email bỏ trống | để trống ô email, nhập password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-04 | | | |
+| FR02-DT-01 | Đăng nhập thành công (happy path) | `test@eshop.com` / `Test1234!`, bấm "Sign In" | Đăng nhập thành công, vào trang chủ, nhận JWT | EP-01, EP-05, EP-08, EP-10 | Đăng nhập thành công, chuyển vào trang chủ, hiển thị "Chào, Test User" | **Pass** | — |
+| FR02-DT-02 | Email chưa đăng ký | `ghost@eshop.com` / `Test1234!` | Từ chối, thông báo lỗi chung (không nói rõ "email không tồn tại") | EP-02, C-FR02-05 | HTTP 401, hiển thị "Đăng nhập thất bại. Vui lòng kiểm tra lại." (không lộ nguyên nhân) | **Pass** | — |
+| FR02-DT-03 | Email sai định dạng | `abc-khong-phai-email` / `Test1234!`, bấm "Sign In" | Client chặn (nếu có HTML5 validate) hoặc server từ chối | EP-03, C-FR02-04 | Form KHÔNG chặn (email `type="text"`, không HTML5 validate); request gửi lên server; UI hiện lỗi chung "Đăng nhập thất bại. Vui lòng kiểm tra lại." (không phân biệt nguyên nhân) | **Fail** | B005 |
+| FR02-DT-04 | Email bỏ trống | để trống ô email, nhập password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-04 | Trình duyệt hiện popup "Vui lòng điền vào trường này", không gửi request | **Pass** | — |
 | FR02-DT-05 | Sai mật khẩu, lần đầu tiên | `test@eshop.com` / `Wrong123!` (tài khoản mới reset, attempts=0) | Từ chối; theo spec: `login_attempts` tăng lên **1**; tài khoản CHƯA bị khóa | EP-06, EP-08, C-FR02-02 | | | |
-| FR02-DT-06 | Mật khẩu bỏ trống | nhập email đúng, để trống password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-07 | | | |
+| FR02-DT-06 | Mật khẩu bỏ trống | nhập email đúng, để trống password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-07 | Trình duyệt hiện popup "Vui lòng điền vào trường này" trên ô mật khẩu, không gửi request | **Pass** | — |
 | FR02-DT-07 | Đăng nhập khi tài khoản đang bị khóa, dù mật khẩu ĐÚNG | Làm sai liên tục cho đến khi bị khóa, sau đó thử lại với `Test1234!` (đúng) | Vẫn bị từ chối; thông báo phải nói rõ "tài khoản đang bị khóa" (khác câu sai mật khẩu) | EP-05, EP-11, C-FR02-06, C-FR02-05 | | | |
 | FR02-DT-08 | Đăng nhập đúng sau khi đã có vài lần sai (nhưng CHƯA bị khóa) | Sai 1 lần, sau đó đăng nhập đúng `Test1234!` | Đăng nhập thành công; bộ đếm reset về 0 | EP-05, EP-08, C-FR02-01 | | | |
 
@@ -171,12 +171,14 @@
 
 *Reset DB (`node database.js`) trước khi bắt đầu chuỗi test đếm số lần sai — vì `login_attempts` là state lưu trong DB, không reset thì kết quả bị nhiễu bởi lần chạy trước.*
 
-| TC-ID | Input / thao tác trên UI | Boundary | Expected (SRS) | Actual | Pass/Fail | Bug-ID |
+*Ghi chú kỹ thuật quan trọng (rút ra sau khi thực thi): code kiểm tra `locked_until` ở ĐẦU mỗi request, dùng trạng thái đã lưu TỪ LẦN TRƯỚC. Do đó, nếu hệ thống tăng đúng +1/lần theo spec, lần sai thứ 3 mới SET khóa vào DB nhưng response của chính lần đó vẫn trả 401 (chưa kiểm tra lại) — 403 chỉ xuất hiện từ **lần thứ 4** trở đi. Cột Expected dưới đây phản ánh đúng điều này.*
+
+| TC-ID | Input / thao tác trên UI | Boundary | Expected (SRS + cơ chế check) | Actual | Pass/Fail | Bug-ID |
 |-------|--------------------------|----------|----------------|--------|-----------|--------|
-| FR02-BV-01 | Sai mật khẩu lần thứ 1 (`test@eshop.com` / `Wrong123!`) | P-01 (attempts=1) | Từ chối; `login_attempts` = 1; **chưa** bị khóa | | | |
-| FR02-BV-02 | Sai mật khẩu lần thứ 2 (liên tiếp) | P-02 (attempts=2) | Từ chối; `login_attempts` = 2; **chưa** bị khóa | | | |
-| FR02-BV-03 | Sai mật khẩu lần thứ 3 (liên tiếp) | P-03 — on-point | Từ chối; **bị khóa ngay** (403), thông báo "tài khoản đã bị khóa" | | | |
-| FR02-BV-04 | Thử đăng nhập (mật khẩu đúng hoặc sai) ngay sau lần sai thứ 3 | P-04 (attempts=4, đã khóa từ P-03) | Vẫn bị từ chối vì đang trong thời gian khóa | | | |
+| FR02-BV-01 | Sai mật khẩu lần thứ 1 (`test@eshop.com` / `Wrong123!`) | P-01 (attempts=1) | HTTP 401, chưa bị khóa | HTTP 401 (Network tab), chưa khóa | **Pass** | — |
+| FR02-BV-02 | Sai mật khẩu lần thứ 2 (liên tiếp) | P-02 (attempts=2) | HTTP 401, chưa bị khóa (khóa chỉ mới được SET nội bộ ở lần này nếu đúng spec, chưa enforce) | HTTP 401 (Network tab), chưa khóa | **Pass** | — |
+| FR02-BV-03 | Sai mật khẩu lần thứ 3 (liên tiếp) | P-03 | HTTP 401 (spec +1: đây là lần lock được SET, response vẫn 401; **403 phải đợi lần thứ 4**) | HTTP **403** — đã bị khóa **ngay tại lần thứ 3** | **Fail** — khóa sớm hơn 1 lần so với đúng thiết kế | B001 |
+| FR02-BV-04 | Thử đăng nhập lại bằng mật khẩu ĐÚNG khi đã 403 | P-04 | Vẫn bị từ chối vì đang trong thời gian khóa; thông báo phải cho biết "đang bị khóa" (khác câu sai mật khẩu, spec R3) | Không đo được lần đầu — giữa lúc 403 và lúc thử lại đã trôi quá nhiều thời gian (làm xen 3 test khác), tài khoản tự mở khóa → trả về 200 (login thành công), không phản ánh đúng trạng thái "đang khóa". **Cần làm lại nhanh, liền mạch (xem hướng dẫn tiếp theo).** | Not run | — |
 | FR02-BV-05 | Sau khi bị khóa ở BV-03, đợi đúng 29 giây rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-05 | Vẫn bị từ chối — còn 1 giây nữa mới hết hạn khóa | | | |
 | FR02-BV-06 | Đợi đến giây thứ 30 (tính từ lúc bị khóa) rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-06 — on-point | Đăng nhập **thành công**, bộ đếm reset về 0 | | | |
 | FR02-BV-07 | Đợi đến giây thứ 31 rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-07 | Đăng nhập thành công (đã chắc chắn hết hạn khóa) | | | |
