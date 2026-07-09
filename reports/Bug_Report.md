@@ -112,6 +112,18 @@
 
 ---
 
+## Ảnh minh chứng — FR-02 Mobile
+
+### B011 — App không phân biệt sai mật khẩu vs bị khóa
+![B011](FR-02-mobile_bugs/B011.png)
+
+### B019 — Không chặn submit khi để trống email/mật khẩu
+![B019](FR-02-mobile_bugs/B019.png)
+
+> Bug B001 (khóa sau 3 lần) tái lập qua mobile — dùng chung ảnh `FR-02_bugs/B001.png` đã có ở Feature A, không chụp lại.
+
+---
+
 ## Ghi chú phạm vi (lỗi ngoài phạm vi UI — KHÔNG tính là bug nộp)
 
 Theo phạm vi Functional UI, các lỗi sau chỉ chạm được bằng gọi API trực tiếp nên **không đưa vào bảng bug**, chỉ ghi nhận ở AI Gap Analysis:

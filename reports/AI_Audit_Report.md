@@ -111,3 +111,18 @@
 - **Prompt:** Sinh viên xác nhận đã bổ sung đủ 4 ảnh B017; gửi kết quả BV-02..05 và 2 robust R01/R02.
 - **AI Output:** BV-02/03/04 Pass (đúng khớp spec ở các điểm biên hợp lệ). BV-05 (name 256 ký tự) Fail — phát hiện bug MỚI **B018**: hệ thống không truncate cũng không từ chối, lưu nguyên vẹn 256 ký tự — bổ sung khả năng thứ 3 (hoàn toàn không validate) mà thiết kế BVA ban đầu chỉ tính đến 2 khả năng (từ chối/cắt bớt). BV-01 đánh dấu Fail dùng chung bằng chứng với DT-05/B009 (không lặp lại test). Robust R01 (tràn INTEGER) và R02 (chặn ký tự chữ) đều Pass, không phát hiện bug mới. Cập nhật Metrics FR-15 cuối: 15/15 executed, 8 pass, 7 fail, 4 bugs (B009, B010, B017, B018). Bổ sung 2 bài học AI Gap Analysis (kiểm tra 2 tầng backend+client khi test Update; thiết kế Expected có đủ 3 khả năng khi spec không rõ hành vi vi phạm).
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh BV-05 vào FR-15_bugs/B018.png chưa? Đã tạo GitHub Issues cho 4 bug FR-15 (B009, B010, B017, B018) chưa?]
+
+### [LOG-017] — FR-02 Mobile hoàn tất 100% — CẢ 4 FEATURE ĐÃ XONG
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên xác nhận kết quả robust test (empty submit không chặn, không crash); yêu cầu hoàn thiện FR-02 Mobile.
+- **AI Output:** Xác nhận B019 (thiếu chặn submit rỗng + thiếu dấu * bắt buộc, severity thấp). Điền đầy đủ bảng cross-check với Feature A (số lần khóa/thời gian/thông báo — cả 3 đều nhất quán giữa web và mobile, xác nhận bug nằm ở backend dùng chung). Cập nhật Metrics FR-02 Mobile: 10 designed, 9 executed, 4 pass, 5 fail, 1 not-run (bỏ qua có chủ đích), 3 bug (B001 tái lập, B011 và B019 mới). Bổ sung 3 bài học AI Gap Analysis đặc trưng cho cross-platform testing (đọc code hời hợt vs thiếu dữ kiện, độ ưu tiên test cross-check khi đã có bằng chứng mạnh, không mặc định 2 client giống nhau ở tầng UI).
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh B019 (màn hình submit rỗng) vào FR-02-mobile_bugs/B019.png chưa? Đã tạo GitHub Issues cho B011, B019 chưa?]
+
+## TỔNG KẾT AUDIT — CẢ 4 FEATURE ĐÃ HOÀN THÀNH 100% VỀ NỘI DUNG KỸ THUẬT
+- FR-02 (web): 21/21 TC, 6 bug (B001-B005, B012)
+- FR-09: 20/20 TC, 4 bug (B006-B008, B013)
+- FR-15: 15/15 TC, 4 bug (B009, B010, B017, B018)
+- FR-02 Mobile: 9/10 TC (1 bỏ qua có chủ đích), 3 bug (B001 tái lập, B011, B019)
+- Tổng: 65 TC thực thi, 17 bug ID xác nhận bằng chứng thật
+- Việc còn lại: tạo GitHub Issues cho toàn bộ bug, AI_Critique.md, README Test Summary, xuất PDF, git log, đóng gói nộp bài.
