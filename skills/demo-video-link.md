@@ -2,7 +2,7 @@
 
 | Video | Nội dung | Link |
 |---|---|---|
-| Video 1 | Demo skill end-to-end trên FR-09 (spec-vs-code → domain → BVA → chạy UI thấy bug) | [dán link YouTube] |
+| Video 1 | Demo skill end-to-end trên FR-09 (spec-vs-code → domain → BVA → chạy UI thấy bug) | [Xem trên YouTube](https://www.youtube.com/watch?v=qCm-Q3DnU4g) |
 
 Kịch bản quay (~5–10 phút):
 1. Mở SKILL.md, giải thích 30 giây.

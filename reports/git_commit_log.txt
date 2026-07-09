@@ -1,3 +1,34 @@
-# Sinh file này ở bước đóng gói bằng lệnh (chạy trong thư mục HW02-Submission):
-#   git log --pretty=format:"%h | %ad | %s" --date=format:"%Y-%m-%d %H:%M" > git-commit-log.txt
-# (Dòng comment này sẽ bị ghi đè khi chạy lệnh.)
+3b3e01f | 2026-07-09 21:52 | [FR02M][bva] Confirm B002 reproduces on mobile too (BV-04 tested: unlocks after 3min, not 30s); update cross-check table, metrics (10/10 executed), overall summary (66/66), and revise outdated gap-analysis point
+1095bad | 2026-07-09 21:34 | [final] Write AI_Critique.md (296 words, within 200-300 range) with real examples; fill README Test Summary and severity breakdown tables, cross-verified against per-feature Metrics
+3198b49 | 2026-07-09 21:27 | [final] Link remaining 6 GitHub Issues (#11-16) for B009, B010, B014, B015, B011, B016 — all 16/16 bugs now have issue links
+7ba3371 | 2026-07-09 21:02 | [final] Rename B017/018/019 to B014/015/016 (fill gap, no missing IDs); reorder Bug_Report by feature grouping; convert Screenshot column to real markdown links; fix broken GitHub Issue link syntax [url] -> [Issue #N](url); merge orphaned Severity column into Description (fixes header/data column mismatch)
+886f89a | 2026-07-09 20:57 | [FR02-mobile] Complete FR-02-mobile app
+a5a0d3e | 2026-07-09 20:52 | [final] Fill overall summary table, top bugs, and conclusion in Main_Report; verify all 4 feature chapters and Bug_Report have no remaining placeholders
+ed596f9 | 2026-07-09 20:41 | [FR02M][gap] Complete FR-02 Mobile: metrics, cross-check table, AI gap analysis; embed evidence images. ALL 4 FEATURES NOW 100% COMPLETE
+3cd20d6 | 2026-07-09 20:39 | [FR02M][exec] Add DT-06 robust test: mobile does not block empty-field submit (B019, low severity)
+8174458 | 2026-07-09 20:32 | [FR02M][exec] Confirm cross-platform reproduction: B001 (locks at attempt 3) and B011 (mobile hides lock message, identical to web B003); note mobile title correctly translated unlike web B012
+b09416d | 2026-07-09 20:16 | [FR015] Complete FR-15
+f14cd88 | 2026-07-09 20:11 | [FR15][bva] Complete FR-15: BV-02..05 results, discover B018 (name length not enforced), robust R01/R02 Pass, full metrics + gap analysis
+e3bf2dd | 2026-07-09 20:02 | [FR15][domain] Update coverage summary — DT-01..08 all executed (3 pass, 5 fail)
+db35fda | 2026-07-09 20:00 | [FR15][bug] Confirm B017 (edit product corrupts display of all products until reload) with root-cause code analysis
+9075027 | 2026-07-09 19:58 | [FR15][exec] Confirm DT-04 Pass (safe HTML escaping); FR-15 DT-01..07 fully complete (2 Pass-clean, 3 Pass no-bug, B009 and B010 confirmed with real evidence)
+b13144b | 2026-07-09 19:45 | [FR15][exec] Confirm B009 (price 0/negative/empty all accepted) and B010 (whitespace-only name accepted) with real evidence from DT-03/05/06/07
+4be5549 | 2026-07-09 18:45 | [FR09][bug] Split B006 evidence into two screenshots (SAVE10 + BIGBUY)
+7f42af3 | 2026-07-09 18:30 | [FR09][bva] Confirm B006 is systemic (applies to BIGBUY too via BV-05); robust R01-R03 all Pass as predicted; FR-09 execution 100% complete (20/20, 4 bugs)
+5a4901f | 2026-07-09 18:16 | [FR09][gap] Complete FR-09: add DT-10 for B013, fill coverage/metrics/gap analysis, embed evidence images, fix B013 image paths
+9c85702 | 2026-07-09 18:07 | [FR09][bva] Confirm B006 off-by-one at exact 300000 threshold; BV-03 shows correct accept decision but B007 recalc bug persists; flag BV-05 as needing redo (wrong coupon code used)
+1775420 | 2026-07-09 18:03 | [FR09][exec][bug] Confirm B008 (guest applies coupon), B007 again at large amount (DT-08), DT-09 Pass (VIP100 limit); strengthen B013 with combined-bug demo (35M->350M via order #4)
+d1879f5 | 2026-07-09 17:43 | [FR09][bug] Confirm B013 with real order evidence (order #3 = 1000d), relabel as FR-09 per group FR-uniqueness constraint; drop unrelated B014 to avoid out-of-scope FR conflict
+4097f00 | 2026-07-09 17:33 | [FR09][exec] Confirm B007 with real data (DT-01), DT-02/03/04/06 Pass; correct DT-05 (client disables button, not a bug); add B013/B014 incidental FR-08 findings (editable total, cart not cleared)
+8d95e43 | 2026-07-09 16:49 | [FR02][exec][bug] Complete FR-02: fill DT-08, add DT-09/DT-10 for B004/B012, update coverage+metrics, embed evidence images in Bug_Report, fix B002 image paths
+8313390 | 2026-07-09 16:45 | [FR02][bva] Run robust cases R01-R04 (all Pass, confirmed SQLi-safe and no crash on long input); FR-02 execution 100% complete (21/21 executed, 6 bugs confirmed)
+54d7685 | 2026-07-09 16:31 | [FR02][exec][bug] Complete FR-02: fill DT-08, add DT-09/DT-10 for B004/B012, update coverage+metrics, embed evidence images in Bug_Report, fix B002 image paths
+5e3315c | 2026-07-09 16:06 | [FR02][exec][bug][gap] Confirm B001 (locks at attempt 3), B002 (lock duration ~180s not 30s), B003 (generic message while locked); fill DT-05/07 and BV-05..07 with real Network-tab evidence; add AI gap analysis lessons
+686f0e4 | 2026-07-09 15:55 | [FR02][bug] Confirm B003 with HTTP 403 evidence (correct password rejected with generic message while locked)
+4a1f74e | 2026-07-09 15:52 | [FR02][exec] Record DT-01..06 and BV-01..04 results (lockout confirmed at attempt 3, ~180s duration hint); pending clean B003 retest
+a9d912d | 2026-07-09 15:03 | feat(FR02): init skeleton for domain + bva + tc
+511cb4d | 2026-07-09 00:53 | [FR09][domain][bva] Generate concrete test cases; [FR15][domain][bva] Generate concrete test cases (UI-scope validation, access-control noted as API-only); [FR02M] Generate cross-check test cases; upgrade Bug_Report to defect table with images; add 255/256 char helpers
+b6409e2 | 2026-07-09 00:35 | [FR02][domain] Add EP, constraints, domain test cases; [FR02][bva] Add BVA points and test cases
+4b46f5c | 2026-07-08 23:22 | [setup] Restructure reports to class-standard format (unified Main_Report, 6-step domain / 4-step BVA, consolidated Bug_Report, SKILL.md skills)
+a1b7122 | 2026-07-08 22:42 | [setup] Apply confirmed UI-only scope and personal GitHub issues repo
+c2ad2c4 | 2026-07-08 22:38 | [setup] Add submission skeleton and report templates

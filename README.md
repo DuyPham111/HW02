@@ -56,7 +56,7 @@
 
 | Video | Nội dung | Link |
 |---|---|---|
-| Video 1 | Demo skill end-to-end trên FR-09 (spec-vs-code → domain → BVA → chạy UI thấy bug) | [dán link YouTube sau khi quay] |
+| Video 1 | Demo skill end-to-end trên FR-09 (spec-vs-code → domain → BVA → chạy UI thấy bug) | [Xem trên YouTube](https://www.youtube.com/watch?v=qCm-Q3DnU4g) |
 
 ## 5. Self-Assessment
 
@@ -66,7 +66,7 @@
 | 2 | Feature B (Domain + Boundary) | 25 | 25 |
 | 3 | Feature C (Domain + Boundary) | 25 | 25 |
 | 4 | Feature D (Mobile, Domain + Boundary) | 15 | 15 |
-| 5 | Agent Skills | 10 | [10 sau khi có video demo] |
-| | **Total** | **100** | **[điền sau khi có video]** |
+| 5 | Agent Skills | 10 | 10 |
+| | **Total** | **100** | **100** |
 
 **Tên file nộp:** `23127183_HW02_AI_DomainTesting_100.zip`
