@@ -100,5 +100,12 @@
 - **AI Output:** Trước khi ghi nhận, truy vấn trực tiếp DB phát hiện `coupon_usage` và `orders` đã trống, sản phẩm mồi cũ (TEST-350k, TEST-299999...) đã mất — xác nhận đã có 1 lần `node database.js` chạy lại ngoài ý muốn giữa các vòng test trước đó, làm mất trạng thái usage đã tích lũy. Ghi nhận BV-06 là Pass nhưng chú thích rõ đây là lượt dùng ĐẦU TIÊN (0→1) do reset, không phải đúng điểm biên (1→2) như thiết kế ban đầu — vẫn hợp lệ làm bằng chứng "chấp nhận khi còn lượt" nhưng kém sát biên hơn dự tính.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh BV-06 vào đúng tên file chưa — xem bảng tổng hợp bên dưới.]
 
-<!-- Copy block để thêm. Đánh số liên tục LOG-014, LOG-015...
+### [LOG-014] — BV-05 làm lại đúng + 3 robust, FR-09 hoàn tất 100%
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên gửi ảnh BV-05 làm lại đúng mã BIGBUY (bị từ chối ở 500.000) và kết quả 3 test robust (R01 disabled, R02 tự uppercase, R03 tự trim).
+- **AI Output:** Xác nhận B006 là lỗi HỆ THỐNG (cùng dòng code `>` áp dụng cho mọi coupon) — không chỉ SAVE10 mà cả BIGBUY đều bị từ chối sai ở đúng ngưỡng, làm bằng chứng mạnh hơn nhiều so với chỉ 1 coupon. 3 robust đều Pass đúng như dự đoán từ việc đọc code (client tự uppercase/trim/disable trước khi gửi request) — không phát hiện bug mới nhưng xác nhận dự đoán đúng. Cập nhật Metrics FR-09 cuối: 20/20 executed, 13 pass, 7 fail, 0 not-run, 4 bugs (B006, B007, B008, B013).
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã tạo GitHub Issues cho 4 bug FR-09 (B006, B007, B008, B013) chưa? Đã lưu đủ ảnh B006.png và B008.png chưa (2 ảnh còn thiếu từ vòng trước)?]
+
+<!-- Copy block để thêm. Đánh số liên tục LOG-015, LOG-016...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->

@@ -349,7 +349,7 @@
 
 > Ô "Tổng tiền thanh toán" trên trang Checkout là input số **tự do chỉnh sửa**, và chính giá trị này (`editableTotal`) được dùng làm `total_amount` gửi cho CẢ API coupon (`/api/apply-coupon`) LẪN API checkout (`/api/checkout`) — nên đây không phải phát hiện ngoài phạm vi mà liên quan trực tiếp đến luồng dữ liệu của FR-09.
 
-**Đã xác nhận bằng đơn hàng thật:** sửa tổng tiền từ 350.000 → 1.000, hoàn tất thanh toán → đơn hàng `#3` trong Lịch sử đơn hàng lưu **Tổng tiền = 1.000 ₫** — xác nhận backend chấp nhận vô điều kiện giá trị client gửi, không tự tính lại từ giỏ hàng.
+**Đã xác nhận bằng đơn hàng thật:** sửa tổng tiền từ 350.000 → 1.000, hoàn tất thanh toán → đơn hàng `#4` trong Lịch sử đơn hàng lưu **Tổng tiền = 1.000 ₫** — xác nhận backend chấp nhận vô điều kiện giá trị client gửi, không tự tính lại từ giỏ hàng.
 
 → Ghi thành **B013** trong `Bug_Report.md` (Feature: FR-09, Severity: Critical — lỗ hổng tài chính, cho phép trả bất kỳ giá nào).
 
@@ -392,21 +392,21 @@
 | FR09-BV-02 | Đăng nhập; giỏ = 300.000 (TEST-300000); áp `SAVE10` | P-02 (on) | **Chấp nhận**; giảm 30.000; thành tiền 270.000 (spec `>=`) | **Bị từ chối**: "Đơn hàng chưa đủ giá trị tối thiểu 300.000 ₫" — đúng bằng ngưỡng vẫn bị coi là chưa đủ | **Fail** | B006 |
 | FR09-BV-03 | Đăng nhập; giỏ = 300.001 (TEST-300001); áp `SAVE10` | P-03 | Chấp nhận; giảm 30.000 (làm tròn) | Chấp nhận đúng (quyết định accept/reject đúng), nhưng số tiền sai do B007: "Tiết kiệm: -2.700.009 ₫", "Thành tiền: 3.000.010 ₫" | **Fail** (số tiền) | B007 |
 | FR09-BV-04 | Đăng nhập; giỏ = 499.999 (TEST-499999); áp `BIGBUY` | P-04 | Từ chối (chưa đủ ngưỡng) | "Đơn hàng chưa đủ giá trị tối thiểu 500.000 ₫" — đúng khớp | **Pass** | — |
-| FR09-BV-05 | Đăng nhập; giỏ = 500.000 (TEST-500000); áp `BIGBUY` | P-05 (on) | **Chấp nhận**; giảm 50.000; thành tiền 450.000 | *(chưa test đúng — lần thử trước lỡ nhập nhầm mã `VIP100` thay vì `BIGBUY`; cần làm lại)* | Not run | — |
+| FR09-BV-05 | Đăng nhập; giỏ = 500.000 (TEST-500000); áp `BIGBUY` | P-05 (on) | **Chấp nhận**; giảm 50.000; thành tiền 450.000 | Bị từ chối: "Đơn hàng chưa đủ giá trị tối thiểu 500.000 ₫ để áp dụng mã này" — đúng bằng ngưỡng vẫn bị coi là chưa đủ, giống hệt BV-02 (SAVE10). Xác nhận bug `>` là **lỗi hệ thống áp dụng cho MỌI coupon**, không riêng SAVE10 | **Fail** | B006 |
 | FR09-BV-06 | Đăng nhập; VIP100 còn lượt (< max); giỏ = 350.000 (TEST-350000); áp `VIP100` | P-06 | Chấp nhận (còn lượt) | Chấp nhận: "Giảm 100.000 ₫", "Thành tiền: 250.000 ₫" — đúng khớp. *(Lưu ý: DB đã bị reset giữa các vòng test nên đây thực chất là lượt dùng đầu tiên [usage 0→1], không phải đúng điểm biên usage=1→2 như thiết kế ban đầu — vẫn là bằng chứng hợp lệ cho "chấp nhận khi còn lượt", chỉ không phải điểm sát biên nhất)* | **Pass** | — |
 | FR09-BV-07 | Đăng nhập; VIP100 usage=2; giỏ = 350.000; áp `VIP100` | P-07 | Từ chối (hết lượt) | Từ chối đúng: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" — dùng chung bằng chứng với DT-09 | **Pass** | — |
 
 ### Bước 4 — Robust / Edge (bổ sung)
 
-| TC-ID | Input | Ghi chú |
-|-------|-------|---------|
-| FR09-BV-R01 | mã rỗng `""` | Kỳ vọng: "Vui lòng nhập mã giảm giá" |
-| FR09-BV-R02 | mã chữ thường `save10` | UI có ép hoa không? backend phân biệt hoa/thường? |
-| FR09-BV-R03 | mã có khoảng trắng thừa `"  SAVE10  "` | có tự trim không? |
+| TC-ID | Input | Ghi chú | Actual | Pass/Fail |
+|-------|-------|---------|--------|-----------|
+| FR09-BV-R01 | mã rỗng `""` | Kỳ vọng: "Vui lòng nhập mã giảm giá" | Nút "Áp dụng" bị vô hiệu hóa (`disabled`), không thể bấm — giống DT-05 | **Pass** |
+| FR09-BV-R02 | mã chữ thường `save10` | UI có ép hoa không? backend phân biệt hoa/thường? | Client tự động chuyển thành in hoa (`SAVE10`) trước khi gửi, áp dụng thành công | **Pass** |
+| FR09-BV-R03 | mã có khoảng trắng thừa `"  SAVE10  "` | có tự trim không? | Client tự trim, vẫn áp dụng được bình thường | **Pass** |
 
 ### Tóm tắt
 
-- Số boundary: 3 (ngưỡng SAVE10, ngưỡng BIGBUY, lượt VIP100) — Số TC: 10 (7 BVA + 3 robust) — Fail: 2/6 đã chạy (BV-02, BV-03); BV-05 chưa chạy đúng (cần làm lại với mã BIGBUY); 3 robust chưa chạy
+- Số boundary: 3 (ngưỡng SAVE10, ngưỡng BIGBUY, lượt VIP100) — Số TC: 10 (7 BVA + 3 robust) — Fail: 3/10 (BV-02, BV-03, BV-05); còn lại đều Pass
 
 ---
 
@@ -420,14 +420,14 @@
 |-------|-----------|--------|------------|
 | FR09-DT-01, FR09-DT-08, FR09-BV-03 | Công thức percent sai — tiết kiệm âm, thành tiền tăng gấp ~10 lần (mọi mức tiền) | B007 | `FR-09_bugs/B007.png` |
 | FR09-DT-07 | Khách chưa đăng nhập vẫn áp được mã (thiếu kiểm tra C4) | B008 | `FR-09_bugs/B008.png` |
-| FR09-BV-02 | Đơn đúng bằng ngưỡng tối thiểu (300.000) vẫn bị từ chối — off-by-one | B006 | `FR-09_bugs/B006.png` |
+| FR09-BV-02, FR09-BV-05 | Đơn đúng bằng ngưỡng tối thiểu vẫn bị từ chối (300.000 SAVE10 và 500.000 BIGBUY) — off-by-one hệ thống | B006 | `FR-09_bugs/B006.png` |
 | FR09-DT-10 | Ô tổng tiền chỉnh sửa tự do, kết hợp bug công thức tạo đơn hàng 350.000.000 ₫ giả | B013 | `FR-09_bugs/B013.png` |
 
 ### Metrics — FR-09
 
 | Designed | Executed | Pass | Fail | Not run | Bugs |
 |----------|----------|------|------|---------|------|
-| 20 (10 Domain + 7 BVA + 3 robust) | 16 | 10 | 6 | 4 (BV-05 + 3 robust) | 4 (B006, B007, B008, B013) |
+| 20 (10 Domain + 7 BVA + 3 robust) | 20 | 13 | 7 | 0 | 4 (B006, B007, B008, B013) |
 
 ---
 
