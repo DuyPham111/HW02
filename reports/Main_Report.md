@@ -681,6 +681,7 @@
 | FR02M-DT-03 | cross-check (bug counter) | Sai mật khẩu liên tiếp 3 lần | Theo spec: khóa từ lần thứ 3 | Sau đúng 3 lần sai, tài khoản bị khóa — khớp chính xác kết quả đã xác nhận trên web (B001, khóa sớm hơn 1 lần do bug `+2`, cùng 1 backend) | **Fail** (theo spec) — tái lập B001 qua mobile | B001 |
 | FR02M-DT-04 | mobile-specific (che lỗi) | Sau khi bị khóa (3 lần sai), nhập lại mật khẩu ĐÚNG | App phải cho biết "tài khoản bị khóa" (khác câu sai mật khẩu) | Vẫn bị từ chối; thông báo **giống hệt, không đổi**: "Đăng nhập thất bại. Vui lòng kiểm tra lại." | **Fail** | B011 |
 | FR02M-DT-05 | mobile-specific (đối chiếu) | So sánh text app (DT-04) với việc đã biết backend trả 403 kèm message "Tài khoản đã bị khóa..." (đã xác nhận qua web B003) | Text app phản ánh đúng loại lỗi | App **không** truyền lại message backend — xác nhận `catch` trong `handleLogin` (`App.js:204-206`) nuốt `data.error`, giống hệt bug ở web (`Login.jsx:18`) | **Fail** | B011 |
+| FR02M-DT-06 | Robust: để trống cả email + mật khẩu, bấm Sign In | Kiểm tra client có chặn submit rỗng không (khác web có `required`) | Nên có validate/chặn phía client + dấu `*` cho trường bắt buộc (spec FR-22) | Không bị chặn — request gửi thẳng lên backend; app không crash/treo, hiện thông báo chung "Đăng nhập thất bại. Vui lòng kiểm tra lại." Nhãn "Username"/"Mật khẩu" không có dấu `*` | **Fail** (nhẹ) | B019 |
 
 ---
 
