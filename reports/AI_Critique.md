@@ -1,6 +1,6 @@
 # AI Critique — HW02 Domain Testing
 
-**Sinh viên:** [HỌ TÊN] ([MSSV]) — **Số từ:** [đếm trước khi nộp — phải trong khoảng 200–300]
+**Sinh viên:** [Phạm Vũ Ngọc Duy] ([23127183]) 
 
 <!--
 Viết 1 đoạn văn 200–300 từ trả lời đủ 3 câu hỏi của đề. Dùng VÍ DỤ THẬT từ bài của bạn.

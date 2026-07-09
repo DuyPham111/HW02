@@ -1,6 +1,6 @@
 # Bug Report — HW02 Domain Testing on EShop
 
-**Họ và tên:** [HỌ TÊN] · **MSSV:** [MSSV] · **Nhóm:** [Nhóm]
+**Họ và tên:** [Phạm Vũ Ngọc Duy] · **MSSV:** [23127183] · **Nhóm:** [10]
 **Repo GitHub Issues (chứa screenshot):** https://github.com/DuyPham111/HW02/issues
 **Môi trường chung:** Windows 11, Chrome [phiên bản], Node v22, backend :3000, web :5173, admin :5174, mobile Expo Go.
 

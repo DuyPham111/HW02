@@ -97,3 +97,10 @@
 
 <!-- Copy block để thêm. Đánh số liên tục LOG-015, LOG-016...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->
+
+### [LOG-015] — FR-15 DT-01..07 hoàn tất (2 bug mới B009, B010); DT-08 tạm hoãn
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên gửi kết quả DT-01..07 kèm 5 ảnh; xác nhận DT-04 hiển thị nguyên văn `<b>Sony</b>` (an toàn); yêu cầu tạm gác DT-08 để hỏi sau, chốt xong DT-01..07 trước.
+- **AI Output:** Xác nhận DT-01, DT-02, DT-04 Pass (đúng spec); DT-03 Fail — dùng lại ID có sẵn **B010** (tên chỉ khoảng trắng vẫn tạo được, không phải bug mới); DT-05/06/07 Fail — dùng lại ID có sẵn **B009**, gộp cả 3 trường hợp (giá 0/âm/rỗng) vào 1 bug vì cùng nguyên nhân gốc (backend không validate `price`, ô price client không có `required`). Cập nhật Bug_Report B009/B010 với Actual thật thay placeholder dự đoán.
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu đủ 4 ảnh — B010.png (hình 1), B009-1/2/3.png (hình 3/4/5) — vào `FR-15_bugs/` chưa?]
