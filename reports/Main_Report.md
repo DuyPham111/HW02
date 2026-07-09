@@ -330,12 +330,12 @@
 
 | TC-ID | Mô tả | Input / thao tác trên UI (Checkout) | Expected (SRS) | EP/Constraint | Actual | Pass/Fail | Bug-ID |
 |-------|-------|-------------------------------------|----------------|---------------|--------|-----------|--------|
-| FR09-DT-01 | Áp mã percent hợp lệ | Đăng nhập; giỏ = 350.000; nhập `SAVE10`, Áp dụng | Thành công; giảm 35.000 (10%); thành tiền 315.000 | EP-01,06,08,10 / C-02 | | | |
-| FR09-DT-02 | Áp mã fixed hợp lệ | Đăng nhập; giỏ = 550.000; nhập `BIGBUY`, Áp dụng | Thành công; giảm 50.000; thành tiền 500.000 | EP-02,06,08 / C-02 | | | |
-| FR09-DT-03 | Mã không tồn tại | Đăng nhập; giỏ = 350.000; nhập `INVALID999` | Từ chối: "Mã giảm giá không tồn tại hoặc đã bị vô hiệu hóa" | EP-03 | | | |
-| FR09-DT-04 | Mã hết hạn | Đăng nhập; giỏ = 150.000; nhập `EXPIRED` | Từ chối: "Mã giảm giá đã hết hạn" | EP-04 / C-01 | | | |
-| FR09-DT-05 | Mã rỗng | Đăng nhập; giỏ = 350.000; để trống ô mã, Áp dụng | Từ chối: "Vui lòng nhập mã giảm giá" | EP-05 | | | |
-| FR09-DT-06 | Chưa đủ ngưỡng | Đăng nhập; giỏ = 250.000; nhập `SAVE10` | Từ chối: "Đơn hàng chưa đủ giá trị tối thiểu 300.000 ₫…" | EP-07 / C-01 | | | |
+| FR09-DT-01 | Áp mã percent hợp lệ | Đăng nhập; giỏ = 350.000 (TEST-350k); nhập `SAVE10`, Áp dụng | Thành công; giảm 35.000 (10%); thành tiền 315.000 | EP-01,06,08,10 / C-02 | "Tiết kiệm: **-3.150.000 ₫**", "Thành tiền: **3.500.000 ₫**" — số âm vô lý, thành tiền tăng gấp 10 lần | **Fail** | B007 |
+| FR09-DT-02 | Áp mã fixed hợp lệ | Đăng nhập; giỏ = 550.000 (TEST-550k); nhập `BIGBUY`, Áp dụng | Thành công; giảm 50.000; thành tiền 500.000 | EP-02,06,08 / C-02 | Giảm 50.000 ₫, thành tiền 500.000 ₫ — đúng khớp | **Pass** | — |
+| FR09-DT-03 | Mã không tồn tại | Đăng nhập; giỏ = 350.000; nhập `INVALID999` | Từ chối: "Mã giảm giá không tồn tại hoặc đã bị vô hiệu hóa" | EP-03 | HTTP 404, "Mã giảm giá không tồn tại hoặc đã bị vô hiệu hóa" — đúng khớp | **Pass** | — |
+| FR09-DT-04 | Mã hết hạn | Đăng nhập; giỏ = 150.000 (TEST-150k); nhập `EXPIRED` | Từ chối: "Mã giảm giá đã hết hạn" | EP-04 / C-01 | HTTP 400, "Mã giảm giá đã hết hạn" — đúng khớp | **Pass** | — |
+| FR09-DT-05 | Mã rỗng | Đăng nhập; giỏ = 350.000; để trống ô mã | Từ chối: "Vui lòng nhập mã giảm giá" | EP-05 | Nút "Áp dụng" bị **vô hiệu hóa** (`disabled` khi `!couponCode.trim()`) — không thể bấm được, không gọi API. Nếu bỏ qua bước áp mã và thanh toán thẳng, đơn hàng thành công bình thường (đúng vì mã giảm giá là tùy chọn) | **Pass** (client chặn đúng trước khi tới API, dù không hiện message rõ ràng) | — |
+| FR09-DT-06 | Chưa đủ ngưỡng | Đăng nhập; giỏ = 250.000 (TEST-250k); nhập `SAVE10` | Từ chối: "Đơn hàng chưa đủ giá trị tối thiểu 300.000 ₫…" | EP-07 / C-01 | Từ chối "chưa đủ ngưỡng tối thiểu" — đúng khớp | **Pass** | — |
 | FR09-DT-07 | Khách chưa đăng nhập áp mã | **Đăng xuất**; giỏ = 350.000; nhập `SAVE10`, Áp dụng | Từ chối; yêu cầu đăng nhập (C4) | EP-09 / C-01 | | | |
 | FR09-DT-08 | Kiểm chứng công thức percent | Đăng nhập; giỏ = 30.000.000; nhập `SAVE10` | Giảm 3.000.000; thành tiền 27.000.000 | EP-01,06 / C-02 | | | |
 | FR09-DT-09 | Hết lượt dùng | Đăng nhập; VIP100 đã dùng 2/2; giỏ = 350.000; nhập `VIP100` | Từ chối: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" | EP-11 / C-01 | | | |
@@ -343,6 +343,17 @@
 ### Tóm tắt coverage
 
 - Số EP: 11 — Số TC: 9 — EP chưa cover: các biên số (EP-06/07/10/11) được phủ sâu hơn ở BVA
+
+### Phát hiện ngoài phạm vi FR-09 (trên cùng trang Checkout)
+
+> FR-08 (Thanh toán) không nằm trong 4 feature đã chọn, nhưng 2 lỗi dưới đây phát hiện tình cờ khi test FR-09 trên cùng trang Checkout. Theo yêu cầu đề bài ("report all discovered bugs"), vẫn ghi nhận vào Bug_Report — không tính vào điểm 4 feature chính.
+
+| Quan sát | Code xác nhận | Spec vi phạm |
+|---|---|---|
+| Ô "Tổng tiền thanh toán" là input số **tự do chỉnh sửa** (đổi 350.000 thành bất kỳ giá trị nào), giá trị này được gửi thẳng lên server khi bấm "Xác Nhận Thanh Toán" | `<input type="number" value={editableTotal} onChange=...>` không có `readOnly` (`Checkout.jsx:93-102`); `handleCheckout` gửi `total_amount: finalAmount` = `editableTotal` (`Checkout.jsx:43-47`) | FR-08: "không cho phép người dùng chỉnh sửa trực tiếp"; "Backend phải tự tính lại tổng tiền; không chấp nhận `total_amount` do client gửi lên" |
+| Giỏ hàng **không bị xóa** sau khi thanh toán thành công | `clearCart` được lấy từ `useCart()` (`Checkout.jsx:8`) nhưng **không hề được gọi** ở bất kỳ đâu trong `handleCheckout` | FR-08: "Sau thanh toán thành công, giỏ hàng được xóa" |
+
+→ Ghi thành **BUG-013** và **BUG-014** trong `Bug_Report.md` (Feature: FR-08, ngoài 4 feature chấm điểm).
 
 ---
 

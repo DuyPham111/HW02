@@ -65,5 +65,12 @@
 - **AI Output:** Điền Actual/Pass-Fail cho cả 4 case: R01 Pass (browser chặn đúng); R02 Pass (server không trim khoảng trắng nhưng spec không yêu cầu nên không tính là bug, chỉ ghi chú UX); R03 Pass (SQL injection bị từ chối an toàn, xác nhận SEC-05 — parameterized query hoạt động đúng); R04 Pass (input 500 ký tự không gây crash). Cập nhật Metrics FR-02 cuối cùng: 21 designed / 21 executed / 13 pass / 8 fail / 0 not-run / 6 bugs.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: xác nhận đã đọc lại toàn bộ FR-02 trong Main_Report + Bug_Report, không còn ô trống nào; đã tạo GitHub Issues chưa (xem LOG-007).]
 
-<!-- Copy block để thêm. Đánh số liên tục LOG-009, LOG-010...
+### [LOG-009] — FR-09 Vòng 1: 6 TC Domain đầu + phát hiện B007 bằng số liệu thật + 2 bug ngoài phạm vi
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên báo kết quả 6 test (DT-01..06) kèm 6 ảnh chụp; nêu thêm 2 quan sát ngoài luồng: ô tổng tiền có thể chỉnh sửa, giỏ hàng không xóa sau thanh toán.
+- **AI Output:** (1) Xác nhận B007 (công thức percent sai) bằng dữ liệu thật: giỏ 350.000 + SAVE10 → "Tiết kiệm -3.150.000 ₫", "Thành tiền 3.500.000 ₫" — khớp chính xác phép tính `total*(1-10)` từ code. (2) DT-02/03/04/06 đều Pass, khớp spec. (3) Đọc code `Checkout.jsx` xác nhận DT-05 KHÔNG phải bug: nút "Áp dụng" có `disabled` khi input rỗng nên không bấm được (client chặn đúng cách) — sửa lại Expected/Actual cho phù hợp thay vì báo Fail sai. (4) Xác nhận qua code 2 phát hiện ngoài luồng của sinh viên là bug THẬT: ô `editableTotal` là `<input type="number">` không `readOnly`, gửi thẳng lên `/api/checkout`; và `clearCart` được import nhưng không bao giờ được gọi trong `handleCheckout`. Thêm B013, B014 (Feature: FR-08, ngoài 4 feature chấm điểm nhưng vẫn báo cáo theo yêu cầu đề "report all discovered bugs").
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh hình 1 (bằng chứng B007) vào `FR-09_bugs/B007.png` chưa? Đã làm bước xác nhận bổ sung cho B013 (sửa tổng tiền rồi thanh toán, kiểm tra lịch sử đơn hàng xem server có lưu giá trị giả không) chưa?]
+
+<!-- Copy block để thêm. Đánh số liên tục LOG-010, LOG-011...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->
