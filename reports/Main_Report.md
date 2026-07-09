@@ -387,11 +387,11 @@
 
 | TC-ID | Input / thao tác trên UI | Boundary | Expected (SRS) | Actual | Pass/Fail | Bug-ID |
 |-------|--------------------------|----------|----------------|--------|-----------|--------|
-| FR09-BV-01 | Đăng nhập; giỏ = 299.999; áp `SAVE10` | P-01 | Từ chối (chưa đủ ngưỡng) | | | |
-| FR09-BV-02 | Đăng nhập; giỏ = 300.000; áp `SAVE10` | P-02 (on) | **Chấp nhận**; giảm 30.000; thành tiền 270.000 | | | |
-| FR09-BV-03 | Đăng nhập; giỏ = 300.001; áp `SAVE10` | P-03 | Chấp nhận; giảm 30.000 (làm tròn) | | | |
-| FR09-BV-04 | Đăng nhập; giỏ = 499.999; áp `BIGBUY` | P-04 | Từ chối (chưa đủ ngưỡng) | | | |
-| FR09-BV-05 | Đăng nhập; giỏ = 500.000; áp `BIGBUY` | P-05 (on) | **Chấp nhận**; giảm 50.000; thành tiền 450.000 | | | |
+| FR09-BV-01 | Đăng nhập; giỏ = 299.999 (TEST-299999); áp `SAVE10` | P-01 | Từ chối (chưa đủ ngưỡng) | "Đơn hàng chưa đủ giá trị tối thiểu 300.000 ₫" — đúng khớp | **Pass** | — |
+| FR09-BV-02 | Đăng nhập; giỏ = 300.000 (TEST-300000); áp `SAVE10` | P-02 (on) | **Chấp nhận**; giảm 30.000; thành tiền 270.000 (spec `>=`) | **Bị từ chối**: "Đơn hàng chưa đủ giá trị tối thiểu 300.000 ₫" — đúng bằng ngưỡng vẫn bị coi là chưa đủ | **Fail** | B006 |
+| FR09-BV-03 | Đăng nhập; giỏ = 300.001 (TEST-300001); áp `SAVE10` | P-03 | Chấp nhận; giảm 30.000 (làm tròn) | Chấp nhận đúng (quyết định accept/reject đúng), nhưng số tiền sai do B007: "Tiết kiệm: -2.700.009 ₫", "Thành tiền: 3.000.010 ₫" | **Fail** (số tiền) | B007 |
+| FR09-BV-04 | Đăng nhập; giỏ = 499.999 (TEST-499999); áp `BIGBUY` | P-04 | Từ chối (chưa đủ ngưỡng) | "Đơn hàng chưa đủ giá trị tối thiểu 500.000 ₫" — đúng khớp | **Pass** | — |
+| FR09-BV-05 | Đăng nhập; giỏ = 500.000 (TEST-500000); áp `BIGBUY` | P-05 (on) | **Chấp nhận**; giảm 50.000; thành tiền 450.000 | *(chưa test đúng — lần thử trước lỡ nhập nhầm mã `VIP100` thay vì `BIGBUY`; cần làm lại)* | Not run | — |
 | FR09-BV-06 | Đăng nhập; VIP100 usage=1; giỏ = 350.000; áp `VIP100` | P-06 | Chấp nhận (còn 1 lượt) | *(chưa test riêng — usage đã lên thẳng 2/2 trước khi kịp đo mốc 1/2; xem BV-07 dùng chung bằng chứng DT-09)* | Not run | — |
 | FR09-BV-07 | Đăng nhập; VIP100 usage=2; giỏ = 350.000; áp `VIP100` | P-07 | Từ chối (hết lượt) | Từ chối đúng: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" — dùng chung bằng chứng với DT-09 | **Pass** | — |
 

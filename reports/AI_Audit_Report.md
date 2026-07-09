@@ -86,5 +86,12 @@
 - **AI Output:** Viết lại B013 theo demo mạnh hơn (35tr → áp SAVE10 → 350tr, xác nhận qua đơn #4) cho thấy 2 bug cộng hưởng. Xác nhận B008 bằng dữ liệu thật: khách chưa đăng nhập áp BIGBUY thành công (vi phạm C4), nhưng bước thanh toán cuối cùng vẫn bị chặn đúng do endpoint khác có `authenticateToken` — ghi rõ ranh giới giữa 2 endpoint để không quy kết nhầm toàn bộ luồng là hổng bảo mật. Xác nhận B007 lần 2 với số tiền lớn (30 triệu → -270tr/300tr). DT-09 Pass (VIP100 đúng chặn ở 2/2 lượt) — dùng chung làm bằng chứng cho BV-07; BV-06 (usage=1) vẫn chưa có test riêng.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu 5 ảnh vào `FR-09_bugs/` với tên đúng (B013.png ghi đè bản cũ, B008.png, và ảnh DT-08 nếu muốn thêm bằng chứng) chưa?]
 
-<!-- Copy block để thêm. Đánh số liên tục LOG-012, LOG-013...
+### [LOG-012] — Xác nhận B006 (off-by-one biên min_order_amount) bằng dữ liệu thật
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên gửi 5 ảnh kết quả BV-01..05 (biên SAVE10 300.000 và BIGBUY 500.000).
+- **AI Output:** Xác nhận B006 chính xác: giỏ 299.999 và giỏ ĐÚNG 300.000 (on-point) cho **cùng kết quả từ chối** — chứng minh rõ ràng bug `>` thay vì `>=`. BV-03 (300.001) cho thấy 2 tầng: quyết định accept/reject đúng, nhưng số tiền vẫn sai do B007 tái xuất hiện (áp dụng cho mọi mức tổng tiền, không riêng số lớn). Phát hiện sinh viên đã lỡ dùng nhầm mã `VIP100` thay vì `BIGBUY` khi test BV-05 (500.000) — kết quả nhận được (giảm 100.000 cố định) không phản ánh đúng biên BIGBUY cần test, nên đánh dấu "Not run", yêu cầu làm lại đúng mã.
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh 2 (BV-02, evidence B006) vào `FR-09_bugs/B006.png` chưa?]
+
+<!-- Copy block để thêm. Đánh số liên tục LOG-013, LOG-014...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->
