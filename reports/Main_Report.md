@@ -573,38 +573,43 @@
 
 | TC-ID | Input / thao tác trên UI | Boundary | Expected (SRS) | Actual | Pass/Fail | Bug-ID |
 |-------|--------------------------|----------|----------------|--------|-----------|--------|
-| FR15-BV-01 | name hợp lệ, price=`0`, Lưu | P-01 | Từ chối (giá phải > 0) | | | |
-| FR15-BV-02 | name hợp lệ, price=`1`, Lưu | P-02 (on) | Chấp nhận (giá dương nhỏ nhất) | | | |
-| FR15-BV-03 | name=`"A"` (1 ký tự), price hợp lệ, Lưu | P-05 (on) | Chấp nhận | | | |
-| FR15-BV-04 | name = chuỗi 255 ký tự, price hợp lệ, Lưu | P-06 (on) | Chấp nhận (đúng giới hạn tối đa) | | | |
-| FR15-BV-05 | name = chuỗi 256 ký tự, price hợp lệ, Lưu | P-07 | Từ chối / cắt còn 255 (vượt giới hạn) | | | |
+| FR15-BV-01 | name hợp lệ, price=`0`, Lưu | P-01 | Từ chối (giá phải > 0) | Trùng nguyên nhân với DT-05 (giá 0) — dùng chung bằng chứng, không lặp lại test | **Fail** | B009 |
+| FR15-BV-02 | name hợp lệ, price=`1`, Lưu | P-02 (on) | Chấp nhận (giá dương nhỏ nhất) | Tạo thành công với giá 1đ — đúng khớp | **Pass** | — |
+| FR15-BV-03 | name=`"A"` (1 ký tự), price hợp lệ, Lưu | P-05 (on) | Chấp nhận | Tạo thành công với tên 1 ký tự — đúng khớp | **Pass** | — |
+| FR15-BV-04 | name = chuỗi 255 ký tự, price hợp lệ, Lưu | P-06 (on) | Chấp nhận (đúng giới hạn tối đa) | Tạo thành công, không báo lỗi gì — đúng khớp | **Pass** | — |
+| FR15-BV-05 | name = chuỗi 256 ký tự, price hợp lệ, Lưu | P-07 | Từ chối / cắt còn 255 (vượt giới hạn) | Tạo thành công KHÔNG cắt bớt — kiểm tra lại vẫn nguyên 256 ký tự. Vi phạm giới hạn tối đa 255 ký tự (spec R1) | **Fail** | B018 |
 
 ### Bước 4 — Robust / Edge (bổ sung)
 
 | TC-ID | Input | Ghi chú |
 |-------|-------|---------|
-| FR15-BV-R01 | price = `2147483648` (tràn INTEGER 32-bit) | Có lưu đúng/tràn số không? |
-| FR15-BV-R02 | price = chữ `"abc"` | Ô `type="number"` có chặn gõ chữ không? (dự đoán: chặn) |
+| FR15-BV-R01 | price = `2147483648` (tràn INTEGER 32-bit) | Tạo thành công, KHÔNG bị tràn số, giá trị lưu đúng — SQLite `INTEGER` không giới hạn 32-bit như tên gọi. **Pass**, không phải bug |
+| FR15-BV-R02 | price = chữ `"abc"` | Không gõ được chữ vào ô, chỉ nhập được số — đúng dự đoán (`type="number"` chặn). **Pass** |
 
 ### Tóm tắt
 
-- Số boundary: — Số TC: — Fail:
+- Số boundary: 2 (price > 0, name.length ≤ 255) — Số TC: 7 (5 BVA + 2 robust), đã chạy 7/7 — 5 Pass, 2 Fail (BV-01 trùng B009, BV-05 → B018 mới)
 
 ---
 
 ## 3. Test Execution — FR-15
 
-**Ngày thực thi:** [.....] · **Tài khoản:** `admin@eshop.com` (luồng chuẩn) và `test@eshop.com` (kiểm tra access control) · Reset DB sau các TC tạo rác.
+**Ngày thực thi:** 2026-07-09 · **Tài khoản:** `admin@eshop.com` · Chuỗi 255/256 ký tự lấy từ `reports/test-data-helpers.md`.
 
-| TC-ID | Mô tả | Expected (SRS) | Actual (quan sát trên UI) | Result | Bug-ID |
-|-------|-------|----------------|---------------------------|--------|--------|
-| | | | | | |
+> Actual/Pass-Fail chi tiết từng TC đã điền trực tiếp vào bảng Bước 6 (Domain) và Bước 3 (BVA) ở trên. Bảng dưới tóm tắt riêng các TC **Fail**.
+
+| TC-ID | Mô tả lỗi | Bug-ID | Screenshot |
+|-------|-----------|--------|------------|
+| FR15-DT-03 | Tên chỉ khoảng trắng vẫn tạo được | B010 | `FR-15_bugs/B010.png` |
+| FR15-DT-05, FR15-DT-06, FR15-DT-07, FR15-BV-01 | Giá 0 / âm / rỗng đều tạo được (không validate) | B009 | `FR-15_bugs/B009-1.png`, `B009-2.png`, `B009-3.png` |
+| FR15-DT-08 | Sửa 1 sản phẩm làm hiển thị sai toàn bộ danh sách + dữ liệu cũ cho đến khi F5 | B017 | `FR-15_bugs/B017-1.png` → `B017-4.png` |
+| FR15-BV-05 | Tên 256 ký tự vẫn được lưu nguyên, không cắt/từ chối | B018 | `FR-15_bugs/B018.png` |
 
 ### Metrics — FR-15
 
 | Designed | Executed | Pass | Fail | Not run | Bugs |
 |----------|----------|------|------|---------|------|
-| | | | | | |
+| 15 (8 Domain + 5 BVA + 2 robust) | 15 | 8 | 7 | 0 | 4 (B009, B010, B017, B018) |
 
 ---
 
@@ -612,16 +617,15 @@
 
 ### 1. Kịch bản/lỗi AI bỏ sót (AI Gaps)
 
-<!-- Gợi ý: AI GIẢ ĐỊNH API/UI đã có auth theo best practice → không sinh TC "user thường CRUD";
-     AI chỉ tập trung Create, lơ Update/Delete; AI không nghĩ đến 255/256 hay tràn INTEGER nếu không bị ép. -->
-
 | Kịch bản / lỗi bị bỏ sót | Root cause | Bài học & khắc phục |
 |--------------------------|------------|---------------------|
-| | | |
+| AI thiết kế DT-08 chỉ với kỳ vọng đơn giản "sửa giá, xem sản phẩm khác có đổi không" — không lường trước rằng bug có thể biểu hiện qua **cơ chế cập nhật state phía client** (không gọi lại API sau khi sửa) khiến TOÀN BỘ danh sách hiển thị sai (đổi tên hàng loạt + dữ liệu cũ) chứ không chỉ đơn giản "có/không đổi đúng 1 trường" | AI đọc code tĩnh thấy `PUT` đúng thao tác trên 1 sản phẩm (`WHERE id = ?`) nên kết luận R4 "có vẻ" khớp spec ở tầng backend — không tự chạy để phát hiện tầng CLIENT có logic cập nhật cục bộ (`fakeMassUpdatedProducts`) hoàn toàn độc lập và sai lệch so với backend | Với mọi thao tác Update/Edit, phải kiểm tra CẢ hai tầng: backend có lưu đúng không (query DB trực tiếp nếu cần) VÀ client có hiển thị đúng ngay sau thao tác hay không — không được dừng lại ở 1 tầng |
+| AI thiết kế BVA cho `name.length` chỉ dừng ở việc "chấp nhận/từ chối ở 255/256" mà không đủ nghi ngờ để kiểm tra xem hệ thống có "tự cắt bớt" (truncate) hay không khi vượt giới hạn — chỉ khi thực thi mới lộ ra là backend chấp nhận nguyên vẹn 256 ký tự, không truncate cũng không từ chối | Spec chỉ nói "tối đa 255 ký tự" mà không nói rõ hành vi khi vượt (từ chối hay tự cắt) — AI mặc định 1 trong 2 khả năng mà không tự kiểm tra khả năng thứ 3 (hoàn toàn không validate) | Khi spec mô tả 1 giới hạn nhưng không rõ hành vi khi vi phạm, nên thiết kế Expected dạng "phải có MỘT trong các hành vi: từ chối HOẶC tự cắt — không được chấp nhận nguyên vẹn" để bẫy được đúng trường hợp "không validate gì cả" |
 
 ### 2. Cải tiến prompt
 
-1. ...
+1. Prompt cũ: "kiểm tra sửa 1 sản phẩm có ảnh hưởng sản phẩm khác không". → Prompt cải thiện: "kiểm tra sửa 1 sản phẩm: (a) query DB xác nhận backend lưu đúng, (b) xem UI hiển thị NGAY sau khi lưu (chưa reload) có đúng không, (c) so sánh 2 kết quả — nếu khác nhau, đó là bug hiển thị phía client, không phải bug dữ liệu."
+2. Prompt cũ: "sinh BVA cho giới hạn độ dài, kỳ vọng từ chối hoặc cắt bớt ở max+1". → Prompt cải thiện: "sinh BVA cho giới hạn độ dài; Expected phải liệt kê rõ 3 khả năng (từ chối / tự cắt / hoàn toàn không validate) để không bỏ sót trường hợp thứ 3 khi ghi kết quả."
 
 ---
 ---

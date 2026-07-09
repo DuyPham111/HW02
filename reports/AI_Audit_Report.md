@@ -104,3 +104,10 @@
 - **Prompt:** Sinh viên gửi kết quả DT-01..07 kèm 5 ảnh; xác nhận DT-04 hiển thị nguyên văn `<b>Sony</b>` (an toàn); yêu cầu tạm gác DT-08 để hỏi sau, chốt xong DT-01..07 trước.
 - **AI Output:** Xác nhận DT-01, DT-02, DT-04 Pass (đúng spec); DT-03 Fail — dùng lại ID có sẵn **B010** (tên chỉ khoảng trắng vẫn tạo được, không phải bug mới); DT-05/06/07 Fail — dùng lại ID có sẵn **B009**, gộp cả 3 trường hợp (giá 0/âm/rỗng) vào 1 bug vì cùng nguyên nhân gốc (backend không validate `price`, ô price client không có `required`). Cập nhật Bug_Report B009/B010 với Actual thật thay placeholder dự đoán.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu đủ 4 ảnh — B010.png (hình 1), B009-1/2/3.png (hình 3/4/5) — vào `FR-15_bugs/` chưa?]
+
+### [LOG-016] — FR-15 BVA + Robust hoàn tất 100%, phát hiện B018
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên xác nhận đã bổ sung đủ 4 ảnh B017; gửi kết quả BV-02..05 và 2 robust R01/R02.
+- **AI Output:** BV-02/03/04 Pass (đúng khớp spec ở các điểm biên hợp lệ). BV-05 (name 256 ký tự) Fail — phát hiện bug MỚI **B018**: hệ thống không truncate cũng không từ chối, lưu nguyên vẹn 256 ký tự — bổ sung khả năng thứ 3 (hoàn toàn không validate) mà thiết kế BVA ban đầu chỉ tính đến 2 khả năng (từ chối/cắt bớt). BV-01 đánh dấu Fail dùng chung bằng chứng với DT-05/B009 (không lặp lại test). Robust R01 (tràn INTEGER) và R02 (chặn ký tự chữ) đều Pass, không phát hiện bug mới. Cập nhật Metrics FR-15 cuối: 15/15 executed, 8 pass, 7 fail, 4 bugs (B009, B010, B017, B018). Bổ sung 2 bài học AI Gap Analysis (kiểm tra 2 tầng backend+client khi test Update; thiết kế Expected có đủ 3 khả năng khi spec không rõ hành vi vi phạm).
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh BV-05 vào FR-15_bugs/B018.png chưa? Đã tạo GitHub Issues cho 4 bug FR-15 (B009, B010, B017, B018) chưa?]

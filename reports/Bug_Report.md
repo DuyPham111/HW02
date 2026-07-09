@@ -28,6 +28,7 @@
 | **B010** | [FR-15] Chấp nhận tên sản phẩm chỉ gồm khoảng trắng | **Pre:** Đăng nhập admin, tab Sản phẩm.<br>**Steps:** 1. Thêm sản phẩm, name=`"   "` (3 dấu cách), price hợp lệ. 2. Lưu.<br>**Expected:** Từ chối (tên bắt buộc, spec R1).<br>**Actual:** **Tạo thành công** — sản phẩm hiện trong danh sách với tên hiển thị trống rỗng (chỉ khoảng trắng, không nhìn thấy chữ). Form admin có `required` trên ô name (`App.jsx:498`) nhưng thuộc tính này chỉ chặn chuỗi rỗng tuyệt đối `""`, không chặn chuỗi chỉ gồm khoảng trắng; backend cũng không có validate bổ sung. | FR-15 | `FR-15_bugs/B010.png` | [link] | Open |
 | **B011** | [FR-02 Mobile] App không phân biệt sai mật khẩu vs bị khóa | **Pre:** Chạy app Expo, tài khoản đang bị khóa.<br>**Steps:** 1. Thử đăng nhập trên app. 2. Đọc thông báo. 3. Đối chiếu 403 backend.<br>**Expected:** App cho biết đang bị khóa.<br>**Actual:** [điền — dự đoán: cùng câu chung như sai mật khẩu] | FR-02 Mobile | `FR-02-mobile_bugs/B011.png` | [link] | Open |
 | **B017** | [FR-15] Sửa 1 sản phẩm làm hiển thị sai TOÀN BỘ danh sách (đổi tên hàng loạt + dữ liệu cũ) cho đến khi tải lại trang | **Pre:** Đăng nhập admin, tab Sản phẩm, danh sách có ≥ 2 sản phẩm.<br>**Steps:** 1. Ghi lại tên/giá/ảnh/mô tả gốc của toàn bộ danh sách. 2. Bấm "Sửa" 1 sản phẩm bất kỳ, đổi CẢ tên, giá, ảnh, mô tả, category thành giá trị mới. 3. Bấm "Cập nhật" (KHÔNG tải lại trang). 4. Quan sát toàn bộ danh sách. 5. Tải lại trang (F5), quan sát lại.<br>**Expected:** Chỉ sản phẩm được sửa thay đổi (spec R4); các trường khác của sản phẩm đó (giá/ảnh/mô tả/category) phải hiển thị đúng giá trị mới ngay sau khi lưu, không cần tải lại trang.<br>**Actual:** Ngay sau khi lưu (chưa F5): (1) **TẤT CẢ sản phẩm khác đều bị đổi tên** thành tên của sản phẩm vừa sửa; (2) sản phẩm vừa sửa vẫn hiển thị giá/ảnh/mô tả/category **CŨ** dù alert báo "Cập nhật thành công!". Sau khi F5: mọi thứ hiển thị đúng trở lại (tên riêng biệt từng sản phẩm, sản phẩm vừa sửa có đủ giá trị mới) — xác nhận **dữ liệu backend không hề bị hỏng**, đây thuần túy là lỗi hiển thị phía client. **Nguyên nhân (code):** nhánh sửa trong `handleProductSubmit` (`App.jsx:108-116`) không gọi lại `fetchData()` như nhánh tạo mới, mà tự dựng `const fakeMassUpdatedProducts = products.map(p => ({...p, name: productForm.name}))` rồi `setProducts(...)` — biểu thức này gán `name` của sản phẩm đang sửa cho MỌI phần tử trong mảng (không lọc theo `id`), đồng thời giữ nguyên (`...p`) các trường khác theo giá trị TRƯỚC khi sửa thay vì lấy dữ liệu mới từ server. | FR-15 | `FR-15_bugs/B017-1.png`, `FR-15_bugs/B017-2.png`, `FR-15_bugs/B017-3.png`, `FR-15_bugs/B017-4.png` | [link] | Open |
+| **B018** | [FR-15] Không giới hạn độ dài tên sản phẩm ở 255 ký tự (thiếu validate max-length) | **Pre:** Đăng nhập admin, tab Sản phẩm.<br>**Steps:** 1. Thêm sản phẩm với name = chuỗi đúng 256 ký tự, price hợp lệ. 2. Lưu. 3. Kiểm tra lại độ dài tên đã lưu.<br>**Expected:** Từ chối, hoặc tự động cắt còn 255 ký tự (spec R1: tối đa 255 ký tự).<br>**Actual:** Tạo thành công, không có thông báo lỗi/cảnh báo nào; kiểm tra lại tên vẫn **nguyên vẹn 256 ký tự**, không bị cắt bớt. Xác nhận backend hoàn toàn không kiểm tra độ dài `name` (cùng nhóm nguyên nhân với B010 — trường `name` không có bất kỳ validate nào ngoài `required` phía client chặn chuỗi rỗng tuyệt đối). | FR-15 | `FR-15_bugs/B018.png` | [link] | Open |
 | **B013** | [FR-09] Ô "Tổng tiền thanh toán" chỉnh sửa tự do — kết hợp với bug công thức coupon (B007) tạo ra chênh lệch tài chính khổng lồ | **Pre:** Đăng nhập, giỏ = 350.000 (`TEST-350k`).<br>**Steps:** 1. Vào Checkout. 2. Sửa ô "Tổng tiền thanh toán" từ `350000` thành `35000000` (thêm 2 số 0). 3. Nhập `SAVE10`, bấm Áp dụng. 4. Bấm "Xác Nhận Thanh Toán". 5. Vào Lịch sử đơn hàng, kiểm tra `Tổng tiền` đơn vừa tạo.<br>**Expected:** Ô tổng tiền phải chỉ đọc, không cho sửa; backend phải tự tính lại tổng tiền từ giỏ hàng thật (350.000), không nhận giá trị client gửi.<br>**Actual:** Ô nhập tự do (`<input type="number">` không `readOnly`, `Checkout.jsx:93-102`) — giá trị này (`editableTotal`) được dùng làm `total_amount` cho CẢ `/api/apply-coupon` (`Checkout.jsx:30`) LẪN `/api/checkout` (`Checkout.jsx:47`). Sau khi sửa thành 35.000.000 và áp `SAVE10`, hệ thống hiện "Tiết kiệm: **-315.000.000 ₫**", "Thành tiền: **350.000.000 ₫**" (do cộng hưởng với bug công thức B007). **Đã xác nhận bằng đơn hàng thật:** đơn `#4` trong Lịch sử đơn hàng lưu **Tổng tiền = 350.000.000 ₫** — từ một giỏ hàng thật chỉ đáng 350.000 ₫, backend chấp nhận và lưu số tiền gấp 1000 lần, xác nhận không hề tự tính lại từ giỏ hàng. | FR-09 | `FR-09_bugs/B013-1.png`, `FR-09_bugs/B013-2.png` | [link] | Open |
 
 > **Thêm dòng khi phát hiện lỗi mới.** Chỉ đưa vào bảng những lỗi bạn **đã tự chạy và chụp được ảnh**.
@@ -79,6 +80,34 @@
 
 **Đơn hàng thật lưu trong Lịch sử đơn hàng:**
 ![B013-2](FR-09_bugs/B013-2.png)
+
+---
+
+## Ảnh minh chứng — FR-15
+
+### B009 — Backend không validate giá (chấp nhận 0, âm, rỗng)
+![B009-1](FR-15_bugs/B009-1.png)
+![B009-2](FR-15_bugs/B009-2.png)
+![B009-3](FR-15_bugs/B009-3.png)
+
+### B010 — Chấp nhận tên chỉ gồm khoảng trắng
+![B010](FR-15_bugs/B010.png)
+
+### B017 — Sửa 1 sản phẩm làm hiển thị sai toàn bộ danh sách cho đến khi tải lại trang
+**Trước khi sửa:**
+![B017-1](FR-15_bugs/B017-1.png)
+
+**Form đang sửa (giá trị mới):**
+![B017-2](FR-15_bugs/B017-2.png)
+
+**Ngay sau khi lưu — toàn bộ sản phẩm bị đổi tên, dữ liệu sản phẩm sửa vẫn cũ:**
+![B017-3](FR-15_bugs/B017-3.png)
+
+**Sau khi F5 — trở lại đúng:**
+![B017-4](FR-15_bugs/B017-4.png)
+
+### B018 — Không giới hạn tên sản phẩm ở 255 ký tự
+![B018](FR-15_bugs/B018.png)
 
 ---
 
