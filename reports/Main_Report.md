@@ -529,13 +529,13 @@
 
 | TC-ID | Mô tả | Input / thao tác trên UI (Admin) | Expected (SRS) | EP/Constraint | Actual | Pass/Fail | Bug-ID |
 |-------|-------|----------------------------------|----------------|---------------|--------|-----------|--------|
-| FR15-DT-01 | Tạo sản phẩm hợp lệ (happy path) | name=`Tai nghe Sony`, price=`1000000`, category=`Phụ kiện`, Lưu | Tạo thành công; xuất hiện trong danh sách | EP-01,05,09 | | | |
-| FR15-DT-02 | Tên rỗng | để trống name, price=`1000000`, Lưu | Bị chặn (form `required`) / từ chối | EP-02 | | | |
-| FR15-DT-03 | Tên chỉ khoảng trắng | name=`"   "`, price=`1000000`, Lưu | Từ chối (tên bắt buộc) | EP-03 | | | |
+| FR15-DT-01 | Tạo sản phẩm hợp lệ (happy path) | name=`Tai nghe Sony`, price=`1000000`, category=`Phụ kiện`, Lưu | Tạo thành công; xuất hiện trong danh sách | EP-01,05,09 | Tạo thành công, xuất hiện trong danh sách | **Pass** | — |
+| FR15-DT-02 | Tên rỗng | để trống name, price=`1000000`, Lưu | Bị chặn (form `required`) / từ chối | EP-02 | Bị chặn đúng (form `required`) | **Pass** | — |
+| FR15-DT-03 | Tên chỉ khoảng trắng | name=`"   "`, price=`1000000`, Lưu | Từ chối (tên bắt buộc) | EP-03 | **Tạo thành công** — sản phẩm hiện trong danh sách với tên trống (chỉ khoảng trắng), không bị từ chối | **Fail** | B010 |
 | FR15-DT-04 | Tên chứa HTML/XSS | name=`<b>Sony</b>`, price=`1000000`, Lưu | Lưu an toàn, hiển thị dạng text (không render/không alert) | EP-04 | | | |
-| FR15-DT-05 | Giá bằng 0 | name=`SP gia 0`, price=`0`, Lưu | Từ chối (giá phải > 0) | EP-06 / R2 | | | |
-| FR15-DT-06 | Giá âm | name=`SP gia am`, price=`-1`, Lưu | Từ chối (giá phải > 0) | EP-07 / R2 | | | |
-| FR15-DT-07 | Giá rỗng | name=`SP khong gia`, để trống price, Lưu | Từ chối (giá bắt buộc) | EP-08 / R2 | | | |
+| FR15-DT-05 | Giá bằng 0 | name=`SP gia 0`, price=`0`, Lưu | Từ chối (giá phải > 0) | EP-06 / R2 | **Tạo thành công** — sản phẩm hiện trong danh sách với giá "0 đ" | **Fail** | B009 |
+| FR15-DT-06 | Giá âm | name=`SP gia am`, price=`-1`, Lưu | Từ chối (giá phải > 0) | EP-07 / R2 | **Tạo thành công** — sản phẩm hiện trong danh sách với giá "-1 đ" | **Fail** | B009 |
+| FR15-DT-07 | Giá rỗng | name=`SP khong gia`, để trống price, Lưu | Từ chối (giá bắt buộc) | EP-08 / R2 | **Tạo thành công** — sản phẩm hiện trong danh sách với giá trống (chỉ hiện "đ") | **Fail** | B009 |
 | FR15-DT-08 | Sửa 1 sản phẩm, kiểm tra sản phẩm khác | Sửa giá 1 sản phẩm → Lưu → xem các sản phẩm khác | Chỉ sản phẩm được sửa thay đổi | EP-05 / C-02 | | | |
 
 ### Tóm tắt coverage

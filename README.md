@@ -1,6 +1,6 @@
 # HW02 — Domain Testing on EShop
 
-**Sinh viên:** [HỌ TÊN] — **MSSV:** [MSSV] — **Email:** [email]
+**Sinh viên:** [Phạm Vũ Ngọc Duy] — **MSSV:** [23127183] 
 **SUT:** EShop — https://github.com/ttbhanh/eshop-sut
 **Kỹ thuật:** Domain Testing + Boundary Value Analysis
 **Repo GitHub Issues:** https://github.com/DuyPham111/HW02/issues
