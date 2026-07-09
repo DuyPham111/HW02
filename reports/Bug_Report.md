@@ -4,7 +4,8 @@
 **Họ và tên:** Phạm Vũ Ngọc Duy
 **MSSV:** 23127183
 **Nhóm:** 10
-**Repo GitHub Issues:** https://github.com/Kurumi2324/SoftwareTestingHW2_Group10/issues (repo nhóm, tài khoản GitHub cá nhân: DuyPham111)
+**Repo GitHub Issues (nhóm — chính thức):** https://github.com/Kurumi2324/SoftwareTestingHW2_Group10/issues
+**Repo GitHub cá nhân:** https://github.com/DuyPham111/HW02 (tài khoản GitHub: DuyPham111)
 **Môi trường chung:** Windows 11, Chrome [phiên bản], Node v22, backend :3000, web :5173, admin :5174, mobile Expo Go.
 
 ---

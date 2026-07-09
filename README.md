@@ -3,7 +3,8 @@
 **Sinh viên:** Phạm Vũ Ngọc Duy — **MSSV:** 23127183
 **SUT:** EShop — https://github.com/ttbhanh/eshop-sut
 **Kỹ thuật:** Domain Testing + Boundary Value Analysis
-**Repo GitHub Issues:** https://github.com/Kurumi2324/SoftwareTestingHW2_Group10/issues (repo nhóm, tài khoản GitHub cá nhân: DuyPham111)
+**Repo GitHub Issues (nhóm — chính thức):** https://github.com/Kurumi2324/SoftwareTestingHW2_Group10/issues
+**Repo GitHub cá nhân:** https://github.com/DuyPham111/HW02 (tài khoản GitHub: DuyPham111)
 
 ---
 
