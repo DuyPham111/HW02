@@ -44,12 +44,12 @@
 - **AI Output:** (1) Phân tích bài mẫu mới (format bug table giàu thông tin Pre/Steps/Expected/Actual/Env/Severity, domain 4 bước gọn, nhưng THIẾU ảnh). (2) Sinh sẵn test case cụ thể (giá trị input + thao tác UI + Expected theo spec, Actual để trống) cho FR-09 (9 DT + 7 BVA + 3 robust), FR-15 (8 DT + 5 BVA + 2 robust), FR-02 Mobile (5 DT + 4 BVA). (3) Kiểm tra admin UI: phát hiện admin chặn user thường đăng nhập (`App.jsx:65`) → bug access control FR-15 (R5) chỉ chạm được từ API, **loại khỏi TC UI**, chuyển sang Gap Analysis. (4) Nâng cấp `Bug_Report.md` sang bảng Defect giàu thông tin NHƯNG giữ cột Screenshot + GitHub Issue. (5) Sinh chuỗi 255/256 ký tự sẵn (`reports/test-data-helpers.md`). (6) Cập nhật 2 skill cho phép sinh test case cụ thể; cập nhật guide (bước 1–3 AI đã điền, bạn tập trung bước 4–6).
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã đọc lại toàn bộ test case sinh sẵn; xác nhận Expected khớp spec; chưa chạy nên chưa có Actual. Lưu ý: mọi cột "dự đoán" trong báo cáo là suy luận từ code, KHÔNG được chép thành Actual — phải tự chạy trên UI.]
 
-### [LOG-006] — [...]
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
+### [LOG-006] — Thực thi FR-02 trên UI thật (Domain + BVA), xác nhận 3 bug
+- **Tool:** Claude Code (Sonnet 5), hướng dẫn từng bước trực tiếp trong lúc sinh viên thao tác trên trình duyệt
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên yêu cầu hướng dẫn chạy từng test case, gửi ảnh chụp màn hình + tab DevTools Network sau mỗi thao tác thật (đăng nhập sai liên tục, đăng nhập đúng khi đang khóa, đo thời gian khóa ở nhiều mốc).
+- **AI Output:** Dẫn dắt sinh viên qua 3 đợt test trên UI thật: (1) quan sát nhanh — xác nhận B004 (mật khẩu hiện rõ), B005 (email không validate định dạng), phát hiện thêm B012 (tiêu đề trang sai "Đăng Ký"); (2) chuỗi đăng nhập sai — xác nhận qua Network tab: khóa (HTTP 403) xuất hiện ngay lần sai thứ 3, sớm hơn 1 lần so với thiết kế đúng (B001), kèm phân tích kỹ thứ tự xử lý request để giải thích chính xác vì sao; (3) đo thời gian khóa — sau khi sinh viên tự sửa lại số liệu ban đầu bị nhầm ("~30s"), đo lại chính xác bằng đồng hồ tay ở các mốc 30s/1p/2p/3p, xác nhận khóa kéo dài **hơn 3 phút**, khớp chính xác hằng số `180000` trong code (B002); cũng xác nhận B003 (UI không phân biệt sai mật khẩu vs bị khóa) qua bằng chứng HTTP 403 + thông báo chung. Điền Actual/Pass-Fail cho 9/9 TC Domain đã thiết kế và 7/7 TC BVA chính của FR-02; bổ sung 3 dòng học được vào AI Gap Analysis (lỗi dự đoán ban đầu về thời điểm chính xác xuất hiện 403, thiết kế BVA quá sát biên trước khi biết độ lệch bug lớn, rủi ro chèn test case khác làm hỏng phép đo thời gian).
+- **Human Review Notes:** Sinh viên là người trực tiếp thao tác, chụp ảnh, đọc số liệu thật từ DevTools và **tự phát hiện + sửa lại** một số liệu ban đầu báo nhầm (ước lượng "~30 giây" ban đầu, sau đo lại chính xác là hơn 3 phút) — đúng tinh thần không tin tưởng mù quáng vào ước lượng chưa đo kỹ. Ảnh bằng chứng đã lưu vào `reports/FR-02_bugs/` (B001–B005, B012). Còn thiếu: lưu 2 ảnh bằng chứng B001/B002 vào đúng thư mục (đã chụp trong hội thoại, cần export ra file).
 
 <!-- Copy block để thêm. Đánh số liên tục LOG-003, LOG-004...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->

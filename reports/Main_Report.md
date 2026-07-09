@@ -133,10 +133,10 @@
 | FR02-DT-02 | Email chưa đăng ký | `ghost@eshop.com` / `Test1234!` | Từ chối, thông báo lỗi chung (không nói rõ "email không tồn tại") | EP-02, C-FR02-05 | HTTP 401, hiển thị "Đăng nhập thất bại. Vui lòng kiểm tra lại." (không lộ nguyên nhân) | **Pass** | — |
 | FR02-DT-03 | Email sai định dạng | `abc-khong-phai-email` / `Test1234!`, bấm "Sign In" | Client chặn (nếu có HTML5 validate) hoặc server từ chối | EP-03, C-FR02-04 | Form KHÔNG chặn (email `type="text"`, không HTML5 validate); request gửi lên server; UI hiện lỗi chung "Đăng nhập thất bại. Vui lòng kiểm tra lại." (không phân biệt nguyên nhân) | **Fail** | B005 |
 | FR02-DT-04 | Email bỏ trống | để trống ô email, nhập password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-04 | Trình duyệt hiện popup "Vui lòng điền vào trường này", không gửi request | **Pass** | — |
-| FR02-DT-05 | Sai mật khẩu, lần đầu tiên | `test@eshop.com` / `Wrong123!` (tài khoản mới reset, attempts=0) | Từ chối; theo spec: `login_attempts` tăng lên **1**; tài khoản CHƯA bị khóa | EP-06, EP-08, C-FR02-02 | | | |
+| FR02-DT-05 | Sai mật khẩu, lần đầu tiên | `test@eshop.com` / `Wrong123!` (tài khoản mới reset, attempts=0) | Từ chối; theo spec: `login_attempts` tăng lên **1**; tài khoản CHƯA bị khóa | EP-06, EP-08, C-FR02-02 | HTTP 401, chưa khóa (bề ngoài khớp spec — xem BV-01..03 để biết bộ đếm nội bộ tăng nhanh hơn +1) | **Pass** (bề ngoài) | liên quan B001 |
 | FR02-DT-06 | Mật khẩu bỏ trống | nhập email đúng, để trống password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-07 | Trình duyệt hiện popup "Vui lòng điền vào trường này" trên ô mật khẩu, không gửi request | **Pass** | — |
-| FR02-DT-07 | Đăng nhập khi tài khoản đang bị khóa, dù mật khẩu ĐÚNG | Làm sai liên tục cho đến khi bị khóa, sau đó thử lại với `Test1234!` (đúng) | Vẫn bị từ chối; thông báo phải nói rõ "tài khoản đang bị khóa" (khác câu sai mật khẩu) | EP-05, EP-11, C-FR02-06, C-FR02-05 | | | |
-| FR02-DT-08 | Đăng nhập đúng sau khi đã có vài lần sai (nhưng CHƯA bị khóa) | Sai 1 lần, sau đó đăng nhập đúng `Test1234!` | Đăng nhập thành công; bộ đếm reset về 0 | EP-05, EP-08, C-FR02-01 | | | |
+| FR02-DT-07 | Đăng nhập khi tài khoản đang bị khóa, dù mật khẩu ĐÚNG | Làm sai liên tục cho đến khi bị khóa, sau đó thử lại với `Test1234!` (đúng) | Vẫn bị từ chối; thông báo phải nói rõ "tài khoản đang bị khóa" (khác câu sai mật khẩu) | EP-05, EP-11, C-FR02-06, C-FR02-05 | HTTP 403 xác nhận đang khóa, nhưng UI hiện y hệt câu sai mật khẩu — không nói rõ lý do | **Fail** | B003 |
+| FR02-DT-08 | Đăng nhập đúng sau khi đã có vài lần sai (nhưng CHƯA bị khóa) | Sai 1 lần, sau đó đăng nhập đúng `Test1234!` | Đăng nhập thành công; bộ đếm reset về 0 | EP-05, EP-08, C-FR02-01 | *(chưa test riêng — code R4 đã xác nhận khớp spec ở Bước 1; rủi ro thấp, có thể bỏ qua nếu thiếu thời gian)* | Not run | — |
 
 ### Tóm tắt coverage
 
@@ -179,9 +179,9 @@
 | FR02-BV-02 | Sai mật khẩu lần thứ 2 (liên tiếp) | P-02 (attempts=2) | HTTP 401, chưa bị khóa (khóa chỉ mới được SET nội bộ ở lần này nếu đúng spec, chưa enforce) | HTTP 401 (Network tab), chưa khóa | **Pass** | — |
 | FR02-BV-03 | Sai mật khẩu lần thứ 3 (liên tiếp) | P-03 | HTTP 401 (spec +1: đây là lần lock được SET, response vẫn 401; **403 phải đợi lần thứ 4**) | HTTP **403** — đã bị khóa **ngay tại lần thứ 3** | **Fail** — khóa sớm hơn 1 lần so với đúng thiết kế | B001 |
 | FR02-BV-04 | Thử đăng nhập lại bằng mật khẩu ĐÚNG khi đã 403 | P-04 | Vẫn bị từ chối vì đang trong thời gian khóa; thông báo phải cho biết "đang bị khóa" (khác câu sai mật khẩu, spec R3) | HTTP **403** (xác nhận đang khóa) dù gõ đúng `Test1234!`; UI vẫn hiện **y hệt** câu "Đăng nhập thất bại. Vui lòng kiểm tra lại." — không có gì phân biệt với sai mật khẩu, người dùng không biết mình đang bị khóa | **Fail** | B003 |
-| FR02-BV-05 | Sau khi bị khóa ở BV-03, đợi đúng 29 giây rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-05 | Vẫn bị từ chối — còn 1 giây nữa mới hết hạn khóa | | | |
-| FR02-BV-06 | Đợi đến giây thứ 30 (tính từ lúc bị khóa) rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-06 — on-point | Đăng nhập **thành công**, bộ đếm reset về 0 | | | |
-| FR02-BV-07 | Đợi đến giây thứ 31 rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-07 | Đăng nhập thành công (đã chắc chắn hết hạn khóa) | | | |
+| FR02-BV-05 | Sau khi bị khóa, đợi ~30 giây rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-05 | Vẫn bị từ chối — còn 1 giây nữa mới hết hạn khóa (nếu đúng spec 30s, đáng lẽ đã sắp mở) | HTTP 403 — **vẫn còn khóa** ở mốc 30 giây (3:59 PM) | Pass (đúng vẫn khóa tại mốc gần biên, nhưng vì lý do khác — xem BV-06) | — |
+| FR02-BV-06 | Đợi đến giây thứ 30 (on-point spec) rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-06 — on-point | Đăng nhập **thành công**, bộ đếm reset về 0 | HTTP 403 — **KHÔNG mở khóa**. Tiếp tục đo thêm: >1 phút vẫn 403; >2 phút (4:01 PM) vẫn 403; đến **sau hơn 3 phút** mới thấy HTTP 200 (đăng nhập thành công, vào được trang chủ, các API `me`/`products` tiếp theo đều 200) | **Fail** — thời gian khóa thực tế ~3 phút (180s), không phải 30s | B002 |
+| FR02-BV-07 | Đợi đến giây thứ 31 rồi thử đăng nhập bằng mật khẩu ĐÚNG | P-07 | Đăng nhập thành công (đã chắc chắn hết hạn khóa theo spec) | HTTP 403 — vẫn khóa (nhất quán với BV-06, khớp hằng số `180000` ms trong `server.js:57`) | **Fail** | B002 |
 
 ### Bước 4 — Robust / Edge (bổ sung)
 
@@ -218,18 +218,16 @@
 
 ### 1. Kịch bản/lỗi AI bỏ sót (AI Gaps)
 
-<!-- Gợi ý gap FR02: AI giả định counter +1 và khóa sau 3 lần theo "kiến thức chung", không tự biết
-     hành vi thật nếu không được dán code; AI không nghĩ đến ĐO thời gian khóa thực tế;
-     AI đoán message tiếng Anh trong khi cần đối chiếu text tiếng Việt hiển thị trên UI;
-     AI bỏ qua thuộc tính GUI (type ô input, vị trí thông báo lỗi). -->
-
 | Kịch bản / lỗi bị bỏ sót | Root cause (vì sao AI sót) | Bài học & khắc phục |
 |--------------------------|----------------------------|---------------------|
-| | | |
+| Ở BVA Bước 2, AI ban đầu ghi Expected cho on-point (lần sai thứ 3) là "bị khóa NGAY (403)" — nhưng qua thực thi và truy vết kỹ code, hóa ra ngay cả hệ thống làm ĐÚNG spec (+1/lần) cũng KHÔNG trả 403 ở lần thứ 3 (chỉ SET khóa vào DB, response vẫn 401), mà phải đến **lần thứ 4** mới thấy 403 — vì code kiểm tra `locked_until` ở đầu request, dùng trạng thái đã lưu TỪ TRƯỚC, không phải trạng thái vừa cập nhật trong chính request đó. | AI đọc spec theo nghĩa đen ("sai 3 lần thì khóa") mà không truy vết TỪNG BƯỚC xử lý của 1 request cụ thể (thứ tự: check-khóa-trước rồi mới xử-lý-mật-khẩu-sau). Đây là lỗi logic về THỨ TỰ xử lý (ordering), khó phát hiện nếu chỉ đọc code tĩnh mà không mô phỏng từng request nối tiếp nhau. | Khi phân tích code có state lưu qua nhiều request, phải tự mô phỏng tay từng bước (request 1 → DB thay đổi gì → request 2 nhìn thấy gì) thay vì suy luận tổng quát từ 1 dòng code riêng lẻ. |
+| AI ban đầu thiết kế BVA thời gian khóa với 3 mốc rất sát nhau (29s/30s/31s) theo đúng con số spec — nhưng vì bug thời gian khóa lệch quá xa (180s thay vì 30s), bộ 3 mốc sát biên này gần như vô dụng để phát hiện bug (cả 3 đều cho cùng 1 kết quả "vẫn khóa"), lãng phí công đo đạc. | AI thiết kế BVA "an toàn" bám sát số liệu spec, không tính đến khả năng bug lệch pha rất lớn (bội số hằng số, không phải lệch 1 đơn vị). | Khi đã có nghi vấn bug từ Bước 1 (đọc code thấy hằng số khác spec rõ rệt, vd 180000 vs 30000), nên thiết kế thêm các mốc đo THÔ (1 phút, 2 phút, 3 phút) bên cạnh mốc BVA sát biên theo spec, để dò nhanh phạm vi thực tế trước khi tinh chỉnh. |
+| Lần thử đầu tiên đo B003 (đợt 2), do có làm xen 3 test case khác ở giữa, thời gian trôi qua đủ lâu khiến khóa tự hết hạn trước khi kịp quan sát — mất 1 lượt test. | AI (khi lập hướng dẫn từng bước) không tính đến việc CHÈN các test case khác vào giữa 1 chuỗi test có yếu tố THỜI GIAN sẽ làm hỏng phép đo; hướng dẫn ban đầu không nhấn mạnh đủ rõ "phải làm liền mạch". | Với mọi TC phụ thuộc thời gian/trạng thái tạm thời (khóa, OTP, session hết hạn…), phải tách thành 1 chuỗi thao tác liên tục, không xen test case khác vào giữa. |
 
 ### 2. Cải tiến prompt
 
-1. [prompt cũ → prompt cải thiện]
+1. Prompt cũ (Bước 3 BVA): "sinh BVA 3-point sát biên theo số liệu spec". → Prompt cải thiện: "sinh BVA 3-point theo spec, NHƯNG nếu Bước 1 đã phát hiện hằng số code khác spec, bổ sung thêm các mốc đo thô (order-of-magnitude) để định vị nhanh giá trị thật trước khi tinh chỉnh về sát biên."
+2. Prompt cũ (hướng dẫn thực thi): không có ràng buộc về tính liên tục. → Prompt cải thiện: "với mọi TC có yếu tố thời gian/trạng thái tạm thời, ép chạy liền mạch trong 1 chuỗi, không chèn TC khác vào giữa; ghi rõ mốc thời gian bắt đầu."
 
 ---
 ---
