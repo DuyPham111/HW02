@@ -72,5 +72,12 @@
 - **AI Output:** (1) Xác nhận B007 (công thức percent sai) bằng dữ liệu thật: giỏ 350.000 + SAVE10 → "Tiết kiệm -3.150.000 ₫", "Thành tiền 3.500.000 ₫" — khớp chính xác phép tính `total*(1-10)` từ code. (2) DT-02/03/04/06 đều Pass, khớp spec. (3) Đọc code `Checkout.jsx` xác nhận DT-05 KHÔNG phải bug: nút "Áp dụng" có `disabled` khi input rỗng nên không bấm được (client chặn đúng cách) — sửa lại Expected/Actual cho phù hợp thay vì báo Fail sai. (4) Xác nhận qua code 2 phát hiện ngoài luồng của sinh viên là bug THẬT: ô `editableTotal` là `<input type="number">` không `readOnly`, gửi thẳng lên `/api/checkout`; và `clearCart` được import nhưng không bao giờ được gọi trong `handleCheckout`. Thêm B013, B014 (Feature: FR-08, ngoài 4 feature chấm điểm nhưng vẫn báo cáo theo yêu cầu đề "report all discovered bugs").
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh hình 1 (bằng chứng B007) vào `FR-09_bugs/B007.png` chưa? Đã làm bước xác nhận bổ sung cho B013 (sửa tổng tiền rồi thanh toán, kiểm tra lịch sử đơn hàng xem server có lưu giá trị giả không) chưa?]
 
-<!-- Copy block để thêm. Đánh số liên tục LOG-010, LOG-011...
+### [LOG-010] — Xác nhận B013 bằng đơn hàng thật, gắn lại đúng feature theo ràng buộc nhóm
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên gửi ảnh Lịch sử đơn hàng (đơn #3, Tổng tiền 1.000 ₫) xác nhận backend lưu đúng giá trị đã sửa tay; đồng thời nêu ràng buộc của giảng viên (không được trùng FR đã chọn với thành viên nhóm khác) và yêu cầu đổi nhãn feature của B013 từ FR-08 sang FR-09 (vì liên quan phần thanh toán), hoặc bỏ nếu không cần thiết.
+- **AI Output:** Cập nhật B013: đổi Feature từ "FR-08 (ngoài phạm vi)" sang **FR-09**, giải thích căn cứ hợp lý (ô `editableTotal` chính là `total_amount` được dùng chung cho cả API coupon và API checkout, nên không phải phát hiện ngoài luồng mà thuộc luồng dữ liệu FR-09); điền Actual với bằng chứng đơn hàng thật (#3, 1.000 ₫). Loại bỏ B014 (giỏ hàng không xóa) khỏi Bug_Report chính thức vì không có liên hệ trực tiếp với FR-09, để tránh rủi ro gán nhầm FR ngoài phạm vi 4 feature đã chọn — xóa luôn thư mục `FR-08_bugs` không dùng nữa.
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh Lịch sử đơn hàng vào `FR-09_bugs/B013.png` chưa? Đồng ý với quyết định bỏ B014 hay muốn giữ lại dưới hình thức khác (vd ghi chú phụ, không tính điểm)?]
+
+<!-- Copy block để thêm. Đánh số liên tục LOG-011, LOG-012...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->

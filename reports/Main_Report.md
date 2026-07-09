@@ -344,16 +344,15 @@
 
 - Số EP: 11 — Số TC: 9 — EP chưa cover: các biên số (EP-06/07/10/11) được phủ sâu hơn ở BVA
 
-### Phát hiện ngoài phạm vi FR-09 (trên cùng trang Checkout)
+### Phát hiện thêm liên quan trực tiếp đến FR-09 (ô tổng tiền dùng chung với coupon)
 
-> FR-08 (Thanh toán) không nằm trong 4 feature đã chọn, nhưng 2 lỗi dưới đây phát hiện tình cờ khi test FR-09 trên cùng trang Checkout. Theo yêu cầu đề bài ("report all discovered bugs"), vẫn ghi nhận vào Bug_Report — không tính vào điểm 4 feature chính.
+> Ô "Tổng tiền thanh toán" trên trang Checkout là input số **tự do chỉnh sửa**, và chính giá trị này (`editableTotal`) được dùng làm `total_amount` gửi cho CẢ API coupon (`/api/apply-coupon`) LẪN API checkout (`/api/checkout`) — nên đây không phải phát hiện ngoài phạm vi mà liên quan trực tiếp đến luồng dữ liệu của FR-09.
 
-| Quan sát | Code xác nhận | Spec vi phạm |
-|---|---|---|
-| Ô "Tổng tiền thanh toán" là input số **tự do chỉnh sửa** (đổi 350.000 thành bất kỳ giá trị nào), giá trị này được gửi thẳng lên server khi bấm "Xác Nhận Thanh Toán" | `<input type="number" value={editableTotal} onChange=...>` không có `readOnly` (`Checkout.jsx:93-102`); `handleCheckout` gửi `total_amount: finalAmount` = `editableTotal` (`Checkout.jsx:43-47`) | FR-08: "không cho phép người dùng chỉnh sửa trực tiếp"; "Backend phải tự tính lại tổng tiền; không chấp nhận `total_amount` do client gửi lên" |
-| Giỏ hàng **không bị xóa** sau khi thanh toán thành công | `clearCart` được lấy từ `useCart()` (`Checkout.jsx:8`) nhưng **không hề được gọi** ở bất kỳ đâu trong `handleCheckout` | FR-08: "Sau thanh toán thành công, giỏ hàng được xóa" |
+**Đã xác nhận bằng đơn hàng thật:** sửa tổng tiền từ 350.000 → 1.000, hoàn tất thanh toán → đơn hàng `#3` trong Lịch sử đơn hàng lưu **Tổng tiền = 1.000 ₫** — xác nhận backend chấp nhận vô điều kiện giá trị client gửi, không tự tính lại từ giỏ hàng.
 
-→ Ghi thành **BUG-013** và **BUG-014** trong `Bug_Report.md` (Feature: FR-08, ngoài 4 feature chấm điểm).
+→ Ghi thành **B013** trong `Bug_Report.md` (Feature: FR-09, Severity: Critical — lỗ hổng tài chính, cho phép trả bất kỳ giá nào).
+
+*(Một quan sát khác — giỏ hàng không tự xóa sau khi thanh toán — không có liên hệ trực tiếp với coupon nên được loại khỏi Bug_Report chính thức để tránh gán nhầm sang FR ngoài phạm vi 4 feature đã chọn.)*
 
 ---
 
