@@ -93,5 +93,12 @@
 - **AI Output:** Xác nhận B006 chính xác: giỏ 299.999 và giỏ ĐÚNG 300.000 (on-point) cho **cùng kết quả từ chối** — chứng minh rõ ràng bug `>` thay vì `>=`. BV-03 (300.001) cho thấy 2 tầng: quyết định accept/reject đúng, nhưng số tiền vẫn sai do B007 tái xuất hiện (áp dụng cho mọi mức tổng tiền, không riêng số lớn). Phát hiện sinh viên đã lỡ dùng nhầm mã `VIP100` thay vì `BIGBUY` khi test BV-05 (500.000) — kết quả nhận được (giảm 100.000 cố định) không phản ánh đúng biên BIGBUY cần test, nên đánh dấu "Not run", yêu cầu làm lại đúng mã.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh 2 (BV-02, evidence B006) vào `FR-09_bugs/B006.png` chưa?]
 
-<!-- Copy block để thêm. Đánh số liên tục LOG-013, LOG-014...
+### [LOG-013] — BV-06 + phát hiện DB đã reset giữa các vòng test
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên gửi ảnh BV-06 (VIP100 chấp nhận, giảm 100.000). Yêu cầu tổng hợp hoàn thiện FR-09, liệt kê phần còn thiếu và tên/vị trí ảnh cần lưu.
+- **AI Output:** Trước khi ghi nhận, truy vấn trực tiếp DB phát hiện `coupon_usage` và `orders` đã trống, sản phẩm mồi cũ (TEST-350k, TEST-299999...) đã mất — xác nhận đã có 1 lần `node database.js` chạy lại ngoài ý muốn giữa các vòng test trước đó, làm mất trạng thái usage đã tích lũy. Ghi nhận BV-06 là Pass nhưng chú thích rõ đây là lượt dùng ĐẦU TIÊN (0→1) do reset, không phải đúng điểm biên (1→2) như thiết kế ban đầu — vẫn hợp lệ làm bằng chứng "chấp nhận khi còn lượt" nhưng kém sát biên hơn dự tính.
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh BV-06 vào đúng tên file chưa — xem bảng tổng hợp bên dưới.]
+
+<!-- Copy block để thêm. Đánh số liên tục LOG-014, LOG-015...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->

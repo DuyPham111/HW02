@@ -27,7 +27,7 @@
 | **B009** | [FR-15] Chấp nhận giá = 0 / giá âm (thiếu validate price > 0) | **Pre:** Đăng nhập admin, tab Sản phẩm.<br>**Steps:** 1. Thêm sản phẩm, name hợp lệ, price=`0` (rồi `-1`). 2. Lưu.<br>**Expected:** Từ chối (spec R2 giá > 0).<br>**Actual:** [điền — dự đoán: lưu thành công] | FR-15 | `FR-15_bugs/B009.png` | [link] | Open |
 | **B010** | [FR-15] Chấp nhận tên chỉ gồm khoảng trắng | **Pre:** Đăng nhập admin, tab Sản phẩm.<br>**Steps:** 1. Thêm sản phẩm, name=`"   "`, price hợp lệ. 2. Lưu.<br>**Expected:** Từ chối (tên bắt buộc, R1).<br>**Actual:** [điền] | FR-15 | `FR-15_bugs/B010.png` | [link] | Open |
 | **B011** | [FR-02 Mobile] App không phân biệt sai mật khẩu vs bị khóa | **Pre:** Chạy app Expo, tài khoản đang bị khóa.<br>**Steps:** 1. Thử đăng nhập trên app. 2. Đọc thông báo. 3. Đối chiếu 403 backend.<br>**Expected:** App cho biết đang bị khóa.<br>**Actual:** [điền — dự đoán: cùng câu chung như sai mật khẩu] | FR-02 Mobile | `FR-02-mobile_bugs/B011.png` | [link] | Open |
-| **B013** | [FR-09] Ô "Tổng tiền thanh toán" chỉnh sửa tự do — kết hợp với bug công thức coupon (B007) tạo ra chênh lệch tài chính khổng lồ | **Pre:** Đăng nhập, giỏ = 350.000 (`TEST-350k`).<br>**Steps:** 1. Vào Checkout. 2. Sửa ô "Tổng tiền thanh toán" từ `350000` thành `35000000` (thêm 2 số 0). 3. Nhập `SAVE10`, bấm Áp dụng. 4. Bấm "Xác Nhận Thanh Toán". 5. Vào Lịch sử đơn hàng, kiểm tra `Tổng tiền` đơn vừa tạo.<br>**Expected:** Ô tổng tiền phải chỉ đọc, không cho sửa; backend phải tự tính lại tổng tiền từ giỏ hàng thật (350.000), không nhận giá trị client gửi.<br>**Actual:** Ô nhập tự do (`<input type="number">` không `readOnly`, `Checkout.jsx:93-102`) — giá trị này (`editableTotal`) được dùng làm `total_amount` cho CẢ `/api/apply-coupon` (`Checkout.jsx:30`) LẪN `/api/checkout` (`Checkout.jsx:47`). Sau khi sửa thành 35.000.000 và áp `SAVE10`, hệ thống hiện "Tiết kiệm: **-315.000.000 ₫**", "Thành tiền: **350.000.000 ₫**" (do cộng hưởng với bug công thức B007). **Đã xác nhận bằng đơn hàng thật:** đơn `#4` trong Lịch sử đơn hàng lưu **Tổng tiền = 350.000.000 ₫** — từ một giỏ hàng thật chỉ đáng 350.000 ₫, backend chấp nhận và lưu số tiền gấp 1000 lần, xác nhận không hề tự tính lại từ giỏ hàng. | FR-09 | `FR-09_bugs/B013.png` | [link] | Open |
+| **B013** | [FR-09] Ô "Tổng tiền thanh toán" chỉnh sửa tự do — kết hợp với bug công thức coupon (B007) tạo ra chênh lệch tài chính khổng lồ | **Pre:** Đăng nhập, giỏ = 350.000 (`TEST-350k`).<br>**Steps:** 1. Vào Checkout. 2. Sửa ô "Tổng tiền thanh toán" từ `350000` thành `35000000` (thêm 2 số 0). 3. Nhập `SAVE10`, bấm Áp dụng. 4. Bấm "Xác Nhận Thanh Toán". 5. Vào Lịch sử đơn hàng, kiểm tra `Tổng tiền` đơn vừa tạo.<br>**Expected:** Ô tổng tiền phải chỉ đọc, không cho sửa; backend phải tự tính lại tổng tiền từ giỏ hàng thật (350.000), không nhận giá trị client gửi.<br>**Actual:** Ô nhập tự do (`<input type="number">` không `readOnly`, `Checkout.jsx:93-102`) — giá trị này (`editableTotal`) được dùng làm `total_amount` cho CẢ `/api/apply-coupon` (`Checkout.jsx:30`) LẪN `/api/checkout` (`Checkout.jsx:47`). Sau khi sửa thành 35.000.000 và áp `SAVE10`, hệ thống hiện "Tiết kiệm: **-315.000.000 ₫**", "Thành tiền: **350.000.000 ₫**" (do cộng hưởng với bug công thức B007). **Đã xác nhận bằng đơn hàng thật:** đơn `#4` trong Lịch sử đơn hàng lưu **Tổng tiền = 350.000.000 ₫** — từ một giỏ hàng thật chỉ đáng 350.000 ₫, backend chấp nhận và lưu số tiền gấp 1000 lần, xác nhận không hề tự tính lại từ giỏ hàng. | FR-09 | `FR-09_bugs/B013-1.png`, `FR-09_bugs/B013-2.png` | [link] | Open |
 
 > **Thêm dòng khi phát hiện lỗi mới.** Chỉ đưa vào bảng những lỗi bạn **đã tự chạy và chụp được ảnh**.
 > Nếu một TC dự đoán ở trên chạy ra KHÔNG phải bug (khác dự đoán) → xóa dòng đó, đừng báo bug sai.
@@ -57,6 +57,26 @@
 
 ### B012 — Tiêu đề/nhãn trang Đăng nhập sai ngôn ngữ
 ![B012](FR-02_bugs/B012.png)
+
+---
+
+## Ảnh minh chứng — FR-09
+
+### B006 — Đơn đúng bằng ngưỡng 300.000 vẫn bị từ chối (off-by-one)
+![B006](FR-09_bugs/B006.png)
+
+### B007 — Công thức percent sai (tiết kiệm âm, thành tiền tăng gấp 10 lần)
+![B007](FR-09_bugs/B007.png)
+
+### B008 — Khách chưa đăng nhập vẫn áp mã thành công
+![B008](FR-09_bugs/B008.png)
+
+### B013 — Ô tổng tiền chỉnh sửa tự do, cộng hưởng với B007 tạo đơn hàng giả 350.000.000 ₫
+**Lúc áp coupon (đã sửa tổng tiền thành 35.000.000):**
+![B013-1](FR-09_bugs/B013-1.png)
+
+**Đơn hàng thật lưu trong Lịch sử đơn hàng:**
+![B013-2](FR-09_bugs/B013-2.png)
 
 ---
 

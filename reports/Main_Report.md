@@ -339,10 +339,11 @@
 | FR09-DT-07 | Khách chưa đăng nhập áp mã | **Đăng xuất**; giỏ = 550.000 (TEST-550k); nhập `BIGBUY`, Áp dụng | Từ chối; yêu cầu đăng nhập (C4) | EP-09 / C-01 | Áp dụng **thành công** dù chưa đăng nhập (giảm 50.000, thành tiền 500.000) — vi phạm C4. Riêng bước "Xác Nhận Thanh Toán" thì bị chặn đúng: "Unauthorized" | **Fail** | B008 |
 | FR09-DT-08 | Kiểm chứng công thức percent | Đăng nhập; giỏ = 30.000.000 (iPhone 15 Pro Max có sẵn); nhập `SAVE10` | Giảm 3.000.000; thành tiền 27.000.000 | EP-01,06 / C-02 | "Tiết kiệm: **-270.000.000 ₫**", "Thành tiền: **300.000.000 ₫**" — cùng lỗi công thức như DT-01, số tiền lớn hơn nên hậu quả rõ ràng hơn | **Fail** | B007 |
 | FR09-DT-09 | Hết lượt dùng | Đăng nhập; VIP100 đã dùng 2/2; giỏ = 350.000 (TEST-350k); nhập `VIP100` | Từ chối: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" | EP-11 / C-01 | Từ chối đúng: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" | **Pass** | — |
+| FR09-DT-10 | Ô tổng tiền chỉnh sửa tự do ảnh hưởng tính coupon | Đăng nhập; giỏ = 350.000; sửa ô Tổng tiền thành 35.000.000; áp `SAVE10`; hoàn tất thanh toán | Ô phải chỉ đọc; backend tự tính lại tổng tiền từ giỏ hàng thật | quan sát bổ sung khi test FR-09 | Sửa được tự do; áp mã tính trên giá trị giả; đơn hàng thật lưu 350.000.000 ₫ (xem chi tiết Bug_Report) | **Fail** | B013 |
 
 ### Tóm tắt coverage
 
-- Số EP: 11 — Số TC: 9 — EP chưa cover: các biên số (EP-06/07/10/11) được phủ sâu hơn ở BVA
+- Số EP: 11 — Số TC: 10 — EP chưa cover: 0 (các biên số EP-06/07/10/11 được phủ sâu hơn ở BVA)
 
 ### Phát hiện thêm liên quan trực tiếp đến FR-09 (ô tổng tiền dùng chung với coupon)
 
@@ -392,7 +393,7 @@
 | FR09-BV-03 | Đăng nhập; giỏ = 300.001 (TEST-300001); áp `SAVE10` | P-03 | Chấp nhận; giảm 30.000 (làm tròn) | Chấp nhận đúng (quyết định accept/reject đúng), nhưng số tiền sai do B007: "Tiết kiệm: -2.700.009 ₫", "Thành tiền: 3.000.010 ₫" | **Fail** (số tiền) | B007 |
 | FR09-BV-04 | Đăng nhập; giỏ = 499.999 (TEST-499999); áp `BIGBUY` | P-04 | Từ chối (chưa đủ ngưỡng) | "Đơn hàng chưa đủ giá trị tối thiểu 500.000 ₫" — đúng khớp | **Pass** | — |
 | FR09-BV-05 | Đăng nhập; giỏ = 500.000 (TEST-500000); áp `BIGBUY` | P-05 (on) | **Chấp nhận**; giảm 50.000; thành tiền 450.000 | *(chưa test đúng — lần thử trước lỡ nhập nhầm mã `VIP100` thay vì `BIGBUY`; cần làm lại)* | Not run | — |
-| FR09-BV-06 | Đăng nhập; VIP100 usage=1; giỏ = 350.000; áp `VIP100` | P-06 | Chấp nhận (còn 1 lượt) | *(chưa test riêng — usage đã lên thẳng 2/2 trước khi kịp đo mốc 1/2; xem BV-07 dùng chung bằng chứng DT-09)* | Not run | — |
+| FR09-BV-06 | Đăng nhập; VIP100 còn lượt (< max); giỏ = 350.000 (TEST-350000); áp `VIP100` | P-06 | Chấp nhận (còn lượt) | Chấp nhận: "Giảm 100.000 ₫", "Thành tiền: 250.000 ₫" — đúng khớp. *(Lưu ý: DB đã bị reset giữa các vòng test nên đây thực chất là lượt dùng đầu tiên [usage 0→1], không phải đúng điểm biên usage=1→2 như thiết kế ban đầu — vẫn là bằng chứng hợp lệ cho "chấp nhận khi còn lượt", chỉ không phải điểm sát biên nhất)* | **Pass** | — |
 | FR09-BV-07 | Đăng nhập; VIP100 usage=2; giỏ = 350.000; áp `VIP100` | P-07 | Từ chối (hết lượt) | Từ chối đúng: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" — dùng chung bằng chứng với DT-09 | **Pass** | — |
 
 ### Bước 4 — Robust / Edge (bổ sung)
@@ -405,23 +406,28 @@
 
 ### Tóm tắt
 
-- Số boundary: 3 (ngưỡng SAVE10, ngưỡng BIGBUY, lượt VIP100) — Số TC: 10 (7 BVA + 3 robust) — Fail: [điền sau khi thực thi]
+- Số boundary: 3 (ngưỡng SAVE10, ngưỡng BIGBUY, lượt VIP100) — Số TC: 10 (7 BVA + 3 robust) — Fail: 2/6 đã chạy (BV-02, BV-03); BV-05 chưa chạy đúng (cần làm lại với mã BIGBUY); 3 robust chưa chạy
 
 ---
 
 ## 3. Test Execution — FR-09
 
-**Ngày thực thi:** [.....] · **Chuẩn bị:** product mồi giá [liệt kê] tạo bằng admin UI · **Reset DB** giữa các vòng đếm lượt.
+**Ngày thực thi:** 2026-07-09 · **Chuẩn bị:** 9+ sản phẩm mồi tạo qua admin UI (`TEST-350k`, `TEST-550k`, `TEST-150k`, `TEST-250k`, `TEST-299999`, `TEST-300000`, `TEST-300001`, `TEST-499999`, `TEST-500000`; một số bị mất do DB reset giữa chừng, tạo lại `TEST-500000`/`TEST-350000` khi cần) · Tài khoản `test@eshop.com`.
 
-| TC-ID | Mô tả | Expected (SRS) | Actual (quan sát trên UI) | Result | Bug-ID |
-|-------|-------|----------------|---------------------------|--------|--------|
-| | | | | | |
+> Actual/Pass-Fail chi tiết từng TC đã điền trực tiếp vào bảng Bước 6 (Domain) và Bước 3 (BVA) ở trên. Bảng dưới tóm tắt riêng các TC **Fail** để tiện tra cứu.
+
+| TC-ID | Mô tả lỗi | Bug-ID | Screenshot |
+|-------|-----------|--------|------------|
+| FR09-DT-01, FR09-DT-08, FR09-BV-03 | Công thức percent sai — tiết kiệm âm, thành tiền tăng gấp ~10 lần (mọi mức tiền) | B007 | `FR-09_bugs/B007.png` |
+| FR09-DT-07 | Khách chưa đăng nhập vẫn áp được mã (thiếu kiểm tra C4) | B008 | `FR-09_bugs/B008.png` |
+| FR09-BV-02 | Đơn đúng bằng ngưỡng tối thiểu (300.000) vẫn bị từ chối — off-by-one | B006 | `FR-09_bugs/B006.png` |
+| FR09-DT-10 | Ô tổng tiền chỉnh sửa tự do, kết hợp bug công thức tạo đơn hàng 350.000.000 ₫ giả | B013 | `FR-09_bugs/B013.png` |
 
 ### Metrics — FR-09
 
 | Designed | Executed | Pass | Fail | Not run | Bugs |
 |----------|----------|------|------|---------|------|
-| | | | | | |
+| 20 (10 Domain + 7 BVA + 3 robust) | 16 | 10 | 6 | 4 (BV-05 + 3 robust) | 4 (B006, B007, B008, B013) |
 
 ---
 
@@ -429,17 +435,16 @@
 
 ### 1. Kịch bản/lỗi AI bỏ sót (AI Gaps)
 
-<!-- Gợi ý: AI test < min và > min nhưng QUÊN on-point = min (đúng chỗ bug off-by-one);
-     AI tin "giảm 10%" theo spec, không kiểm chứng công thức thật → bỏ lỡ bug tính tiền;
-     AI ít khi nghĩ đến việc quan sát số "Tiết kiệm"/"Thành tiền" hiển thị so với tính tay. -->
-
 | Kịch bản / lỗi bị bỏ sót | Root cause | Bài học & khắc phục |
 |--------------------------|------------|---------------------|
-| | | |
+| AI thiết kế TC dựa trên giả định "mỗi TC độc lập, dữ liệu ổn định" — không lường trước việc **DB có thể bị reset ngoài ý muốn giữa các vòng test** (do sinh viên chạy lại `node database.js` khi không nhớ đã làm gì), khiến các test phụ thuộc trạng thái tích lũy (lượt dùng coupon, đơn hàng) mất bằng chứng giữa chừng và phải diễn giải lại (vd BV-06 thực chất test usage=0→1 thay vì 1→2 như thiết kế) | AI không có cách nào biết trước hành vi vận hành thực tế của người thực thi (khi nào họ reset DB); đây là giới hạn cố hữu của việc thiết kế test AI-first mà không giám sát trực tiếp quá trình chạy | Với TC phụ thuộc trạng thái tích lũy nhiều bước (lượt dùng, số dư, lịch sử), nên có bước "kiểm tra nhanh trạng thái DB hiện tại" ngay trước khi diễn giải kết quả, thay vì giả định trạng thái theo đúng kịch bản đã lên kế hoạch |
+| AI thiết kế BV-05 (BIGBUY tại đúng 500.000) nhưng không có cơ chế nào phát hiện khi người thực thi lỡ nhập nhầm mã coupon khác (VIP100 thay vì BIGBUY) — chỉ phát hiện được nhờ đọc kỹ ảnh chụp (thấy tên mã trong ô nhập khác với yêu cầu) | AI dựa hoàn toàn vào mô tả bằng lời của người dùng ("BV-05 chấp nhận") mà không tự đối chiếu ảnh chi tiết ngay từ đầu — rủi ro bỏ sót nếu không kiểm tra chéo | Luôn đối chiếu ảnh chụp thực tế (tên mã, số tiền hiển thị) với đúng input mà TC yêu cầu trước khi ghi Pass/Fail, không tin tưởng mù quáng vào tóm tắt bằng lời |
+| AI ban đầu không dự đoán được rằng bug công thức percent (B007) sẽ **tái xuất hiện ở MỌI mức tiền** (thấy rõ ở DT-01/350k, DT-08/30tr, BV-03/300k) — ban đầu chỉ coi là 1 bug tại 1 điểm dữ liệu, không nhận ra đây là lỗi công thức mang tính hệ thống áp dụng cho toàn bộ domain của biến `total_amount` | AI thiết kế TC theo tư duy "mỗi TC 1 phát hiện" thay vì nhận ra một số bug (đặc biệt lỗi công thức) có phạm vi ảnh hưởng xuyên suốt toàn bộ domain, không phải cục bộ 1 giá trị | Khi phát hiện bug công thức/tính toán ở 1 điểm, nên chủ động kiểm tra thêm ở vài điểm dữ liệu khác (nhỏ, vừa, lớn) để xác nhận phạm vi ảnh hưởng thay vì dừng lại ở 1 lần xác nhận |
 
 ### 2. Cải tiến prompt
 
-1. ...
+1. Prompt cũ: "sinh test case cho FR-09". → Prompt cải thiện: "sinh test case cho FR-09, kèm bước xác minh trạng thái DB (coupon_usage, orders) ngay trước khi diễn giải Actual, để phát hiện sớm nếu dữ liệu đã bị reset ngoài kế hoạch."
+2. Prompt cũ: chỉ hỏi kết quả bằng lời. → Prompt cải thiện: "khi báo kết quả kèm ảnh chụp, đối chiếu tên mã/số tiền trong ảnh với đúng input TC yêu cầu trước khi kết luận Pass/Fail."
 
 ---
 ---
