@@ -336,9 +336,9 @@
 | FR09-DT-04 | Mã hết hạn | Đăng nhập; giỏ = 150.000 (TEST-150k); nhập `EXPIRED` | Từ chối: "Mã giảm giá đã hết hạn" | EP-04 / C-01 | HTTP 400, "Mã giảm giá đã hết hạn" — đúng khớp | **Pass** | — |
 | FR09-DT-05 | Mã rỗng | Đăng nhập; giỏ = 350.000; để trống ô mã | Từ chối: "Vui lòng nhập mã giảm giá" | EP-05 | Nút "Áp dụng" bị **vô hiệu hóa** (`disabled` khi `!couponCode.trim()`) — không thể bấm được, không gọi API. Nếu bỏ qua bước áp mã và thanh toán thẳng, đơn hàng thành công bình thường (đúng vì mã giảm giá là tùy chọn) | **Pass** (client chặn đúng trước khi tới API, dù không hiện message rõ ràng) | — |
 | FR09-DT-06 | Chưa đủ ngưỡng | Đăng nhập; giỏ = 250.000 (TEST-250k); nhập `SAVE10` | Từ chối: "Đơn hàng chưa đủ giá trị tối thiểu 300.000 ₫…" | EP-07 / C-01 | Từ chối "chưa đủ ngưỡng tối thiểu" — đúng khớp | **Pass** | — |
-| FR09-DT-07 | Khách chưa đăng nhập áp mã | **Đăng xuất**; giỏ = 350.000; nhập `SAVE10`, Áp dụng | Từ chối; yêu cầu đăng nhập (C4) | EP-09 / C-01 | | | |
-| FR09-DT-08 | Kiểm chứng công thức percent | Đăng nhập; giỏ = 30.000.000; nhập `SAVE10` | Giảm 3.000.000; thành tiền 27.000.000 | EP-01,06 / C-02 | | | |
-| FR09-DT-09 | Hết lượt dùng | Đăng nhập; VIP100 đã dùng 2/2; giỏ = 350.000; nhập `VIP100` | Từ chối: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" | EP-11 / C-01 | | | |
+| FR09-DT-07 | Khách chưa đăng nhập áp mã | **Đăng xuất**; giỏ = 550.000 (TEST-550k); nhập `BIGBUY`, Áp dụng | Từ chối; yêu cầu đăng nhập (C4) | EP-09 / C-01 | Áp dụng **thành công** dù chưa đăng nhập (giảm 50.000, thành tiền 500.000) — vi phạm C4. Riêng bước "Xác Nhận Thanh Toán" thì bị chặn đúng: "Unauthorized" | **Fail** | B008 |
+| FR09-DT-08 | Kiểm chứng công thức percent | Đăng nhập; giỏ = 30.000.000 (iPhone 15 Pro Max có sẵn); nhập `SAVE10` | Giảm 3.000.000; thành tiền 27.000.000 | EP-01,06 / C-02 | "Tiết kiệm: **-270.000.000 ₫**", "Thành tiền: **300.000.000 ₫**" — cùng lỗi công thức như DT-01, số tiền lớn hơn nên hậu quả rõ ràng hơn | **Fail** | B007 |
+| FR09-DT-09 | Hết lượt dùng | Đăng nhập; VIP100 đã dùng 2/2; giỏ = 350.000 (TEST-350k); nhập `VIP100` | Từ chối: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" | EP-11 / C-01 | Từ chối đúng: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" | **Pass** | — |
 
 ### Tóm tắt coverage
 
@@ -392,8 +392,8 @@
 | FR09-BV-03 | Đăng nhập; giỏ = 300.001; áp `SAVE10` | P-03 | Chấp nhận; giảm 30.000 (làm tròn) | | | |
 | FR09-BV-04 | Đăng nhập; giỏ = 499.999; áp `BIGBUY` | P-04 | Từ chối (chưa đủ ngưỡng) | | | |
 | FR09-BV-05 | Đăng nhập; giỏ = 500.000; áp `BIGBUY` | P-05 (on) | **Chấp nhận**; giảm 50.000; thành tiền 450.000 | | | |
-| FR09-BV-06 | Đăng nhập; VIP100 usage=1; giỏ = 350.000; áp `VIP100` | P-06 | Chấp nhận (còn 1 lượt) | | | |
-| FR09-BV-07 | Đăng nhập; VIP100 usage=2; giỏ = 350.000; áp `VIP100` | P-07 | Từ chối (hết lượt) | | | |
+| FR09-BV-06 | Đăng nhập; VIP100 usage=1; giỏ = 350.000; áp `VIP100` | P-06 | Chấp nhận (còn 1 lượt) | *(chưa test riêng — usage đã lên thẳng 2/2 trước khi kịp đo mốc 1/2; xem BV-07 dùng chung bằng chứng DT-09)* | Not run | — |
+| FR09-BV-07 | Đăng nhập; VIP100 usage=2; giỏ = 350.000; áp `VIP100` | P-07 | Từ chối (hết lượt) | Từ chối đúng: "Bạn đã sử dụng mã này 2 lần (đã đạt giới hạn)" — dùng chung bằng chứng với DT-09 | **Pass** | — |
 
 ### Bước 4 — Robust / Edge (bổ sung)
 

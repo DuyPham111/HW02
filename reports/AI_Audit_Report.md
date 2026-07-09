@@ -79,5 +79,12 @@
 - **AI Output:** Cập nhật B013: đổi Feature từ "FR-08 (ngoài phạm vi)" sang **FR-09**, giải thích căn cứ hợp lý (ô `editableTotal` chính là `total_amount` được dùng chung cho cả API coupon và API checkout, nên không phải phát hiện ngoài luồng mà thuộc luồng dữ liệu FR-09); điền Actual với bằng chứng đơn hàng thật (#3, 1.000 ₫). Loại bỏ B014 (giỏ hàng không xóa) khỏi Bug_Report chính thức vì không có liên hệ trực tiếp với FR-09, để tránh rủi ro gán nhầm FR ngoài phạm vi 4 feature đã chọn — xóa luôn thư mục `FR-08_bugs` không dùng nữa.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu ảnh Lịch sử đơn hàng vào `FR-09_bugs/B013.png` chưa? Đồng ý với quyết định bỏ B014 hay muốn giữ lại dưới hình thức khác (vd ghi chú phụ, không tính điểm)?]
 
-<!-- Copy block để thêm. Đánh số liên tục LOG-011, LOG-012...
+### [LOG-011] — DT-07/08/09 xác nhận thêm B008, B007 (số lớn), và demo B013+B007 cộng hưởng
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên gửi 5 ảnh: (1-2) demo mới cho B013 — sửa tổng tiền thành 35.000.000 rồi áp SAVE10, xác nhận đơn hàng thật lưu 350.000.000; (3) DT-07 kết quả; (4) DT-08 kết quả; (5) DT-09 kết quả.
+- **AI Output:** Viết lại B013 theo demo mạnh hơn (35tr → áp SAVE10 → 350tr, xác nhận qua đơn #4) cho thấy 2 bug cộng hưởng. Xác nhận B008 bằng dữ liệu thật: khách chưa đăng nhập áp BIGBUY thành công (vi phạm C4), nhưng bước thanh toán cuối cùng vẫn bị chặn đúng do endpoint khác có `authenticateToken` — ghi rõ ranh giới giữa 2 endpoint để không quy kết nhầm toàn bộ luồng là hổng bảo mật. Xác nhận B007 lần 2 với số tiền lớn (30 triệu → -270tr/300tr). DT-09 Pass (VIP100 đúng chặn ở 2/2 lượt) — dùng chung làm bằng chứng cho BV-07; BV-06 (usage=1) vẫn chưa có test riêng.
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: đã lưu 5 ảnh vào `FR-09_bugs/` với tên đúng (B013.png ghi đè bản cũ, B008.png, và ảnh DT-08 nếu muốn thêm bằng chứng) chưa?]
+
+<!-- Copy block để thêm. Đánh số liên tục LOG-012, LOG-013...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->
