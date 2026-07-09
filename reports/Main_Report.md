@@ -1,9 +1,9 @@
 # Main Testing Report — HW02 Domain Testing on EShop
 
-**Họ và tên:** [Phạm Vũ Ngọc Duy]
-**MSSV:** [23127183]
-**Nhóm:** [10]
-**Ngày thực hiện:** [01/07/2026] → [07/07/2026]
+**Họ và tên:** Phạm Vũ Ngọc Duy
+**MSSV:** 23127183
+**Nhóm:** 10
+**Ngày thực hiện:** 01/07/2026 → 07/07/2026
 **SUT:** EShop — https://github.com/ttbhanh/eshop-sut
 **Backend:** `http://localhost:3000/api` · Web: `:5173` · Admin: `:5174` · Mobile: Expo (`API_URL = http://192.168.1.12:3000/api`)
 
@@ -68,11 +68,11 @@
 **Checklist kiểm chứng bằng tay trên UI (làm trước khi thực thi chính thức):**
 
 - [x] Reset DB (`node database.js`) → đăng nhập sai bằng `test@eshop.com`: đếm số lần đến khi bị khóa → **XÁC NHẬN: khóa (HTTP 403) ngay tại lần thứ 3** (sớm hơn 1 lần so với đúng thiết kế +1/lần — xem giải thích chi tiết ở BVA Bước 3), 2026-07-09
-- [ ] Ngay khi khóa: đăng nhập với mật khẩu **đúng** → vẫn bị chặn? Ghi nguyên văn câu hiển thị
-- [ ] Bấm giờ: thử mật khẩu đúng ở mốc ~30s và ~3 phút → ghi thời điểm vào lại được
+- [x] Ngay khi khóa: đăng nhập với mật khẩu **đúng** → vẫn bị chặn? Ghi nguyên văn câu hiển thị
+- [x] Bấm giờ: thử mật khẩu đúng ở mốc ~30s và ~3 phút → ghi thời điểm vào lại được
 - [x] Nhập email `abc` → form có bị HTML5 chặn không? (dự đoán: không) → **XÁC NHẬN: KHÔNG chặn**, gửi thẳng, hiện lỗi chung "Đăng nhập thất bại. Vui lòng kiểm tra lại." (2026-07-09, `B005.png`)
 - [x] Gõ mật khẩu → ký tự hiện rõ? Chụp màn hình → **XÁC NHẬN: hiện rõ**, không che (2026-07-09, `B004.png`)
-- [ ] F12 → Network → request `login`: đối chiếu status 401/403 + JSON `error` với text UI
+- [x] F12 → Network → request `login`: đối chiếu status 401/403 + JSON `error` với text UI
 
 ### Bước 2 — Input Variables
 

@@ -1,15 +1,8 @@
 # Bug Report — HW02 Domain Testing on EShop
 
-**Họ và tên:** [Phạm Vũ Ngọc Duy] · **MSSV:** [23127183] · **Nhóm:** [10]
+**Họ và tên:** Phạm Vũ Ngọc Duy · **MSSV:** 23127183 · **Nhóm:** 10
 **Repo GitHub Issues (chứa screenshot):** https://github.com/DuyPham111/HW02/issues
 **Môi trường chung:** Windows 11, Chrome [phiên bản], Node v22, backend :3000, web :5173, admin :5174, mobile Expo Go.
-
-> **Cách dùng:** mỗi lỗi = 1 dòng trong bảng dưới + 1 ảnh trong `reports/FR-XX_bugs/`.
-> Tạo GitHub Issue: Title = cột "Defect Title", body = copy cột "Description", **kéo-thả ảnh trực tiếp
-> vào issue** (GitHub tự sinh URL — tránh ảnh không render), rồi điền link issue vào cột "GitHub Issue".
-> Severity: Critical (mất tiền/bảo mật/hỏng dữ liệu) > High > Medium > Low (hiển thị/UX).
-> Bug được sắp xếp theo thứ tự Feature (A → B → C → D) để dễ tra cứu, không theo thứ tự phát hiện.
-
 ---
 
 ## Bảng tổng hợp lỗi (Defect List)
@@ -124,11 +117,4 @@
 
 > Bug B001 (khóa sau 3 lần) tái lập qua mobile — dùng chung ảnh `FR-02_bugs/B001.png` đã có ở Feature A, không chụp lại.
 
----
 
-## Ghi chú phạm vi (lỗi ngoài phạm vi UI — KHÔNG tính là bug nộp)
-
-Theo phạm vi Functional UI, các lỗi sau chỉ chạm được bằng gọi API trực tiếp nên **không đưa vào bảng bug**, chỉ ghi nhận ở AI Gap Analysis:
-
-- FR-15: `POST/PUT/DELETE /api/products` thiếu kiểm tra token/role (broken access control) — admin UI đã chặn user thường đăng nhập nên không tái hiện được từ giao diện.
-- Mật khẩu lưu plaintext; backend không validate khi gọi API trực tiếp.

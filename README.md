@@ -1,6 +1,6 @@
 # HW02 — Domain Testing on EShop
 
-**Sinh viên:** [Phạm Vũ Ngọc Duy] — **MSSV:** [23127183] 
+**Sinh viên:** Phạm Vũ Ngọc Duy — **MSSV:** 23127183
 **SUT:** EShop — https://github.com/ttbhanh/eshop-sut
 **Kỹ thuật:** Domain Testing + Boundary Value Analysis
 **Repo GitHub Issues:** https://github.com/DuyPham111/HW02/issues
@@ -34,41 +34,41 @@
 
 | Feature | Kỹ thuật | Thiết kế | Thực thi | Pass | Fail | Chưa thực thi |
 |---|---|:--:|:--:|:--:|:--:|:--:|
-| A (FR-02) | Domain | | | | | |
-| A (FR-02) | BVA | | | | | |
-| B (FR-09) | Domain | | | | | |
-| B (FR-09) | BVA | | | | | |
-| C (FR-15) | Domain | | | | | |
-| C (FR-15) | BVA | | | | | |
-| D (FR-02 Mobile) | Domain | | | | | |
-| D (FR-02 Mobile) | BVA | | | | | |
-| **Tổng** | | | | | | |
+| A (FR-02) | Domain | 10 | 10 | 6 | 4 | 0 |
+| A (FR-02) | BVA | 11 | 11 | 7 | 4 | 0 |
+| B (FR-09) | Domain | 10 | 10 | 6 | 4 | 0 |
+| B (FR-09) | BVA | 10 | 10 | 7 | 3 | 0 |
+| C (FR-15) | Domain | 8 | 8 | 3 | 5 | 0 |
+| C (FR-15) | BVA | 7 | 7 | 5 | 2 | 0 |
+| D (FR-02 Mobile) | Domain | 6 | 6 | 2 | 4 | 0 |
+| D (FR-02 Mobile) | BVA | 4 | 3 | 2 | 1 | 1 |
+| **Tổng** | | **66** | **65** | **38** | **27** | **1** |
 
 **Số bug theo mức độ:**
 
 | Feature | Critical | High/Major | Medium | Low/Minor | Tổng |
 |---|:--:|:--:|:--:|:--:|:--:|
-| A (FR-02) | | | | | |
-| B (FR-09) | | | | | |
-| C (FR-15) | | | | | |
-| D (FR-02 Mobile) | | | | | |
-| **Tổng** | | | | | |
+| A (FR-02) | 0 | 1 | 3 | 2 | 6 |
+| B (FR-09) | 2 | 0 | 2 | 0 | 4 |
+| C (FR-15) | 1 | 1 | 1 | 1 | 4 |
+| D (FR-02 Mobile) | 0 | 0 | 1 | 1 | 2 (+ B001 tái lập từ Feature A) |
+| **Tổng** | **3** | **2** | **7** | **4** | **16 bug ID duy nhất** |
 
 ## 4. Demo video (Agent Skill)
 
 | Video | Nội dung | Link |
 |---|---|---|
-| Video 1 | Demo skill end-to-end trên FR-09 | [YouTube link] |
+| Video 1 | Demo skill end-to-end trên FR-09 (spec-vs-code → domain → BVA → chạy UI thấy bug) | [dán link YouTube sau khi quay] |
 
 ## 5. Self-Assessment
 
 | No. | Criteria | Grade | Self-Assessed |
 |---|---|:--:|:--:|
-| 1 | Feature A (Domain + Boundary) | 25 | |
-| 2 | Feature B (Domain + Boundary) | 25 | |
-| 3 | Feature C (Domain + Boundary) | 25 | |
-| 4 | Feature D (Mobile, Domain + Boundary) | 15 | |
-| 5 | Agent Skills | 10 | |
-| | **Total** | **100** | |
+| 1 | Feature A (Domain + Boundary) | 25 | 25 |
+| 2 | Feature B (Domain + Boundary) | 25 | 25 |
+| 3 | Feature C (Domain + Boundary) | 25 | 25 |
+| 4 | Feature D (Mobile, Domain + Boundary) | 15 | 15 |
+| 5 | Agent Skills | 10 | [10 sau khi có video demo] |
+| | **Total** | **100** | **[điền sau khi có video]** |
 
-**Tên file nộp:** `[MSSV]_HW02_AI_DomainTesting_[điểm 3 chữ số].zip`
+**Tên file nộp:** `23127183_HW02_AI_DomainTesting_[điểm 3 chữ số].zip`

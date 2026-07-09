@@ -1,27 +1,9 @@
 # AI Critique — HW02 Domain Testing
 
-**Sinh viên:** [Phạm Vũ Ngọc Duy] ([23127183]) 
+**Sinh viên:** Phạm Vũ Ngọc Duy (23127183)
 
-<!--
-Viết 1 đoạn văn 200–300 từ trả lời đủ 3 câu hỏi của đề. Dùng VÍ DỤ THẬT từ bài của bạn.
-Khung gợi ý (xóa comment này khi viết xong):
+AI (Claude Code) đã sai hoặc thiếu ở vài điểm. Ở FR-02, AI dự đoán khóa sau 2 lần sai, chỉ dựa đọc tĩnh dòng `login_attempts + 2`, nhưng thực thi thật cho thấy khóa đúng ở lần thứ 3 — do AI không truy vết thứ tự xử lý request (backend kiểm tra trạng thái khóa trước khi cập nhật bộ đếm của chính lần gọi đó). Ở FR-15, chỉ đọc code backend, AI kết luận sửa sản phẩm đúng đặc tả vì UPDATE chỉ tác động một dòng theo id — nhưng bug nặng nhất (sửa một sản phẩm làm đổi tên toàn bộ danh sách) nằm ở tầng client, độc lập backend, chỉ lộ khi tự chạy thử. Ở FR-02 Mobile, AI mặc định app hiển thị đúng lỗi gốc từ backend theo thói quen React Native, không phát hiện khối `catch` đã âm thầm thay lỗi thật bằng câu chung chung.
 
-Câu 1 — AI sai/thiên lệch/thiếu ở đâu?
-  Chọn 2–3 ví dụ cụ thể bạn đã ghi trong các file 04-ai-gap-analysis.md, ví dụ:
-  - AI giả định POST /api/products đã có auth (thực tế không có).
-  - AI sinh BVA thiếu on-point (= min) ở FR09 — đúng chỗ bug off-by-one.
-  - AI mặc định mobile hiển thị message lỗi backend, không phát hiện catch nuốt data.error.
-  - AI đoán expected message bằng tiếng Anh trong khi SUT trả tiếng Việt.
+AI không tự bắt được vì nó suy diễn theo khuôn mẫu phổ biến thay vì bám sát code cụ thể, và không thể tự chạy ứng dụng để quan sát hành vi thật — mọi kết luận chỉ là giả thuyết chờ xác nhận.
 
-Câu 2 — Vì sao AI không bắt được?
-  - Suy diễn theo pattern/best practice phổ biến thay vì code thật.
-  - Không có quyền truy cập hành vi runtime — không tự chạy app để kiểm chứng.
-  - Prompt ban đầu của mình thiếu dữ kiện (không dán code, không yêu cầu on-point).
-
-Câu 3 — Nguyên tắc rút ra khi cộng tác với AI?
-  - AI mạnh ở SINH cấu trúc (partition, bảng TC, format báo cáo), yếu ở KIỂM CHỨNG thực tế.
-  - Con người phải là oracle: đối chiếu code + thực thi thật trước khi tin bất kỳ "Actual" nào.
-  - Prompt phải kèm dữ kiện thật (spec + code) và ràng buộc kỹ thuật (on/off-point) thay vì lệnh chung chung.
--->
-
-[Viết đoạn văn tại đây]
+Nguyên tắc rút ra: AI rất mạnh khi sinh cấu trúc kiểm thử có hệ thống (phân vùng, điểm biên, bảng test case) nhanh và đầy đủ, nhưng không thể thay con người xác nhận kết quả thực tế — mọi "Actual" chỉ có giá trị sau khi tự tay kiểm chứng trên giao diện. Với hệ thống nhiều tầng (web, admin, mobile dùng chung backend), bug có thể nằm độc lập ở bất kỳ tầng nào, phải kiểm tra tách bạch, không suy đoán tầng này giống tầng kia.
