@@ -133,14 +133,16 @@
 | FR02-DT-02 | Email chưa đăng ký | `ghost@eshop.com` / `Test1234!` | Từ chối, thông báo lỗi chung (không nói rõ "email không tồn tại") | EP-02, C-FR02-05 | HTTP 401, hiển thị "Đăng nhập thất bại. Vui lòng kiểm tra lại." (không lộ nguyên nhân) | **Pass** | — |
 | FR02-DT-03 | Email sai định dạng | `abc-khong-phai-email` / `Test1234!`, bấm "Sign In" | Client chặn (nếu có HTML5 validate) hoặc server từ chối | EP-03, C-FR02-04 | Form KHÔNG chặn (email `type="text"`, không HTML5 validate); request gửi lên server; UI hiện lỗi chung "Đăng nhập thất bại. Vui lòng kiểm tra lại." (không phân biệt nguyên nhân) | **Fail** | B005 |
 | FR02-DT-04 | Email bỏ trống | để trống ô email, nhập password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-04 | Trình duyệt hiện popup "Vui lòng điền vào trường này", không gửi request | **Pass** | — |
-| FR02-DT-05 | Sai mật khẩu, lần đầu tiên | `test@eshop.com` / `Wrong123!` (tài khoản mới reset, attempts=0) | Từ chối; theo spec: `login_attempts` tăng lên **1**; tài khoản CHƯA bị khóa | EP-06, EP-08, C-FR02-02 | HTTP 401, chưa khóa (bề ngoài khớp spec — xem BV-01..03 để biết bộ đếm nội bộ tăng nhanh hơn +1) | **Pass** (bề ngoài) | liên quan B001 |
+| FR02-DT-05 | Sai mật khẩu, lần đầu tiên | `test@eshop.com` / `Wrong123!` (tài khoản mới reset, attempts=0) | Từ chối; theo spec: `login_attempts` tăng lên **1**; tài khoản CHƯA bị khóa | EP-06, EP-08, C-FR02-02 | HTTP 401, chưa khóa (bề ngoài khớp spec — xem BV-01..03 để biết bộ đếm nội bộ tăng nhanh hơn +1) | **Pass** | B001 |
 | FR02-DT-06 | Mật khẩu bỏ trống | nhập email đúng, để trống password, bấm "Sign In" | Trình duyệt chặn submit (thuộc tính `required`) | EP-07 | Trình duyệt hiện popup "Vui lòng điền vào trường này" trên ô mật khẩu, không gửi request | **Pass** | — |
 | FR02-DT-07 | Đăng nhập khi tài khoản đang bị khóa, dù mật khẩu ĐÚNG | Làm sai liên tục cho đến khi bị khóa, sau đó thử lại với `Test1234!` (đúng) | Vẫn bị từ chối; thông báo phải nói rõ "tài khoản đang bị khóa" (khác câu sai mật khẩu) | EP-05, EP-11, C-FR02-06, C-FR02-05 | HTTP 403 xác nhận đang khóa, nhưng UI hiện y hệt câu sai mật khẩu — không nói rõ lý do | **Fail** | B003 |
-| FR02-DT-08 | Đăng nhập đúng sau khi đã có vài lần sai (nhưng CHƯA bị khóa) | Sai 1 lần, sau đó đăng nhập đúng `Test1234!` | Đăng nhập thành công; bộ đếm reset về 0 | EP-05, EP-08, C-FR02-01 | *(chưa test riêng — code R4 đã xác nhận khớp spec ở Bước 1; rủi ro thấp, có thể bỏ qua nếu thiếu thời gian)* | Not run | — |
+| FR02-DT-08 | Đăng nhập đúng sau khi đã có vài lần sai (nhưng CHƯA bị khóa) | Sai 1 lần, sau đó đăng nhập đúng `Test1234!` | Đăng nhập thành công; bộ đếm reset về 0 | EP-05, EP-08, C-FR02-01 | HTTP 401 (lần sai) → HTTP **200** (lần đúng), vào được trang chủ, các API tiếp theo (`me`, `products`) đều 200 | **Pass** | — |
+| FR02-DT-09 | Ô mật khẩu có che ký tự không | Gõ ký tự bất kỳ vào ô mật khẩu | Hiển thị dạng ẩn `•••` (spec FR-22, `type="password"`) | quan sát UI bổ sung Bước 1 | Ký tự hiển thị rõ dạng plaintext, không bị che | **Fail** | B004 |
+| FR02-DT-10 | Tiêu đề/nhãn trang Đăng nhập đúng ngôn ngữ | Mở trang /login, quan sát tiêu đề + nhãn + nút | Tiêu đề "Đăng Nhập"; nhãn "Email"; nút "Đăng Nhập" (spec FR-21, nhất quán tiếng Việt) | quan sát UI bổ sung Bước 1 | Tiêu đề hiện "Đăng Ký" (sai); nhãn "Username"; nút "Sign In" (tiếng Anh) | **Fail** | B012 |
 
 ### Tóm tắt coverage
 
-- Số EP: 11 — Số TC: 8 — EP chưa cover: EP-FR02-09 (được phủ gián tiếp qua TC-07, và trực tiếp hơn ở BVA Bước 3 dưới)
+- Số EP: 11 — Số TC: 10 — EP chưa cover: 0 (mọi EP đều được phủ trực tiếp hoặc qua BVA)
 
 ---
 
@@ -194,23 +196,30 @@
 
 ### Tóm tắt
 
-- Số boundary: 2 (ngưỡng số lần sai; ngưỡng thời gian khóa) — Số TC: 11 (7 BVA chính + 4 robust) — Fail: [điền sau khi thực thi]
+- Số boundary: 2 (ngưỡng số lần sai; ngưỡng thời gian khóa) — Số TC: 11 (7 BVA chính + 4 robust) — Fail: 4/7 TC chính đã xác nhận (BV-03, BV-04, BV-06, BV-07); 4 TC robust chưa chạy (không có bằng chứng code gợi ý bug ở đây — mức ưu tiên thấp)
 
 ---
 
 ## 3. Test Execution — FR-02
 
-**Ngày thực thi:** [.....] · **Môi trường:** Windows 11, Node v22, Chrome, web :5173, backend :3000 · **Reset DB** trước mỗi kịch bản đếm: `node database.js`
+**Ngày thực thi:** 2026-07-09 · **Môi trường:** Windows 11, Chrome (DevTools Network), web :5173, backend :3000 · **Reset DB** trước mỗi kịch bản đếm: `node database.js`
 
-| TC-ID | Mô tả | Expected (SRS) | Actual (quan sát trên UI, nguyên văn) | Result | Bug-ID |
-|-------|-------|----------------|----------------------------------------|--------|--------|
-| | | | | | |
+> Actual/Pass-Fail chi tiết từng TC đã điền trực tiếp vào bảng Bước 6 (Domain) và Bước 3 (BVA) ở trên. Bảng dưới đây tóm tắt riêng các TC **Fail** để tiện tra cứu khi viết Bug_Report.
+
+| TC-ID | Mô tả lỗi | Bug-ID | Screenshot |
+|-------|-----------|--------|------------|
+| FR02-DT-03 | Email sai định dạng không bị chặn | B005 | `FR-02_bugs/B005.png` |
+| FR02-DT-07, FR02-BV-04 | Đúng mật khẩu vẫn bị từ chối khi đang khóa, thông báo không phân biệt | B003 | `FR-02_bugs/B003.png` |
+| FR02-DT-09 | Ô mật khẩu không che ký tự | B004 | `FR-02_bugs/B004.png` |
+| FR02-DT-10 | Tiêu đề/nhãn trang sai ngôn ngữ | B012 | `FR-02_bugs/B012.png` |
+| FR02-BV-03 | Khóa xuất hiện sớm hơn 1 lần (lần thứ 3 thay vì thứ 4) | B001 | `FR-02_bugs/B001.png` |
+| FR02-BV-06, FR02-BV-07 | Thời gian khóa thực tế ~3 phút, không phải 30 giây | B002 | `FR-02_bugs/B002-start.png`, `FR-02_bugs/B002-endafter3minutes.png` |
 
 ### Metrics — FR-02
 
 | Designed | Executed | Pass | Fail | Not run | Bugs |
 |----------|----------|------|------|---------|------|
-| | | | | | |
+| 21 (10 Domain + 7 BVA + 4 robust) | 17 | 9 | 8 | 4 (robust chưa chạy) | 6 (B001, B002, B003, B004, B005, B012) |
 
 ---
 
