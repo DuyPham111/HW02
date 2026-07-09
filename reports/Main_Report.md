@@ -540,7 +540,7 @@
 
 ### Tóm tắt coverage
 
-- Số EP: 9 — Số TC: 8 — EP chưa cover: biên name (255/256) và biên price → phủ ở BVA dưới
+- Số EP: 9 — Số TC: 8 (đã chạy 8/8) — 3 Pass (DT-01, DT-02, DT-04), 5 Fail (DT-03, DT-05, DT-06, DT-07, DT-08); biên name (255/256) và biên price phủ tiếp ở BVA dưới
 
 ---
 
