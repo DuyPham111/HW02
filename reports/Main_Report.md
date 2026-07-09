@@ -1,9 +1,9 @@
 # Main Testing Report — HW02 Domain Testing on EShop
 
-**Họ và tên:** [HỌ TÊN]
-**MSSV:** [MSSV]
-**Nhóm:** [Nhóm]
-**Ngày thực hiện:** [từ ngày] → [đến ngày]
+**Họ và tên:** [Phạm Vũ Ngọc Duy]
+**MSSV:** [23127183]
+**Nhóm:** [10]
+**Ngày thực hiện:** [01/07/2026] → [07/07/2026]
 **SUT:** EShop — https://github.com/ttbhanh/eshop-sut
 **Backend:** `http://localhost:3000/api` · Web: `:5173` · Admin: `:5174` · Mobile: Expo (`API_URL = http://192.168.1.12:3000/api`)
 
