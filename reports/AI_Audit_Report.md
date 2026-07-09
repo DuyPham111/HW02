@@ -58,5 +58,12 @@
 - **AI Output:** (1) Điền Actual cho DT-08 (Pass, 401→200 xác nhận reset bộ đếm). (2) Gán TC-ID chính thức FR02-DT-09/DT-10 cho 2 phát hiện B004/B012 (trước đó chỉ nằm trong bảng "quan sát bổ sung", không có TC-ID) để coverage đầy đủ. (3) Cập nhật Tóm tắt coverage Domain (11 EP / 10 TC / 0 chưa cover) và Metrics FR-02 (21 designed, 17 executed, 9 pass, 8 fail, 4 not-run, 6 bugs). (4) Thêm bảng tóm tắt "Confirmed Failed Test Cases" liên kết TC-ID ↔ Bug-ID ↔ screenshot. (5) Bug_Report: sửa đường dẫn B002 (2 file thật: B002-start.png, B002-endafter3minutes.png), thêm mục nhúng ảnh trực tiếp cho 6 bug FR-02 để hiện khi xem Markdown/xuất PDF. (6) Nêu rõ giới hạn: AI không có quyền truy cập GitHub của sinh viên nên **không tự tạo được GitHub Issues** — việc này sinh viên phải tự làm thủ công.
 - **Human Review Notes:** [SINH VIÊN ĐIỀN: đã tạo xong 6 GitHub Issues cho FR-02 chưa? Đã dán đủ 6 link vào cột "GitHub Issue" trong Bug_Report.md chưa?]
 
-<!-- Copy block để thêm. Đánh số liên tục LOG-008, LOG-009...
+### [LOG-008] — Chạy nốt 4 test case Robust, FR-02 hoàn tất 100%
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-07-09
+- **Prompt:** Sinh viên chọn chạy luôn 4 test case Robust (BV-R01..R04) trước khi chuyển feature, gửi kết quả: R01 popup HTML5 chặn, R02/R03/R04 đều HTTP 401.
+- **AI Output:** Điền Actual/Pass-Fail cho cả 4 case: R01 Pass (browser chặn đúng); R02 Pass (server không trim khoảng trắng nhưng spec không yêu cầu nên không tính là bug, chỉ ghi chú UX); R03 Pass (SQL injection bị từ chối an toàn, xác nhận SEC-05 — parameterized query hoạt động đúng); R04 Pass (input 500 ký tự không gây crash). Cập nhật Metrics FR-02 cuối cùng: 21 designed / 21 executed / 13 pass / 8 fail / 0 not-run / 6 bugs.
+- **Human Review Notes:** [SINH VIÊN ĐIỀN: xác nhận đã đọc lại toàn bộ FR-02 trong Main_Report + Bug_Report, không còn ô trống nào; đã tạo GitHub Issues chưa (xem LOG-007).]
+
+<!-- Copy block để thêm. Đánh số liên tục LOG-009, LOG-010...
      Mỗi feature thường có 4–6 log (BA, domain TC, BVA, bug report wording, gap analysis). -->

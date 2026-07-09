@@ -187,16 +187,16 @@
 
 ### Bước 4 — Robust / Edge (bổ sung)
 
-| TC-ID | Input | Ghi chú |
-|-------|-------|---------|
-| FR02-BV-R01 | email + password đều rỗng | HTML5 `required` chặn? |
-| FR02-BV-R02 | email có khoảng trắng thừa `"  test@eshop.com  "` | Server có tự trim trước khi so khớp DB không? |
-| FR02-BV-R03 | email = `' OR 1=1--` | Kiểm tra SQL injection có gây lỗi 500 hay bị chặn an toàn |
-| FR02-BV-R04 | password rất dài (500 ký tự) | Kiểm tra không bị crash/treo |
+| TC-ID | Input | Ghi chú | Actual | Pass/Fail |
+|-------|-------|---------|--------|-----------|
+| FR02-BV-R01 | email + password đều rỗng | HTML5 `required` chặn? | Trình duyệt hiện popup "Vui lòng điền vào trường này", không gửi request | **Pass** |
+| FR02-BV-R02 | email có khoảng trắng thừa `"  test@eshop.com  "` | Server có tự trim trước khi so khớp DB không? | HTTP 401 — server KHÔNG trim, không khớp được với `test@eshop.com` trong DB → từ chối | **Pass** — spec không yêu cầu trim, không phải bug, chỉ là observation UX nhỏ |
+| FR02-BV-R03 | email = `' OR 1=1--` | Kiểm tra SQL injection có gây lỗi 500 hay bị chặn an toàn | HTTP 401 — bị từ chối an toàn, không lỗi 500, không bypass được | **Pass** — xác nhận dùng parameterized query (SEC-05), an toàn trước SQL injection |
+| FR02-BV-R04 | password rất dài (500 ký tự) | Kiểm tra không bị crash/treo | HTTP 401 — xử lý bình thường, không treo/crash | **Pass** |
 
 ### Tóm tắt
 
-- Số boundary: 2 (ngưỡng số lần sai; ngưỡng thời gian khóa) — Số TC: 11 (7 BVA chính + 4 robust) — Fail: 4/7 TC chính đã xác nhận (BV-03, BV-04, BV-06, BV-07); 4 TC robust chưa chạy (không có bằng chứng code gợi ý bug ở đây — mức ưu tiên thấp)
+- Số boundary: 2 (ngưỡng số lần sai; ngưỡng thời gian khóa) — Số TC: 11 (7 BVA chính + 4 robust) — Fail: 4/11 (BV-03, BV-04, BV-06, BV-07); 4 robust đều Pass (không phát hiện bug mới, hệ thống an toàn trước SQL injection và input dài)
 
 ---
 
@@ -219,7 +219,7 @@
 
 | Designed | Executed | Pass | Fail | Not run | Bugs |
 |----------|----------|------|------|---------|------|
-| 21 (10 Domain + 7 BVA + 4 robust) | 17 | 9 | 8 | 4 (robust chưa chạy) | 6 (B001, B002, B003, B004, B005, B012) |
+| 21 (10 Domain + 7 BVA + 4 robust) | 21 | 13 | 8 | 0 | 6 (B001, B002, B003, B004, B005, B012) |
 
 ---
 
