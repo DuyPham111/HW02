@@ -16,8 +16,6 @@
 | C | FR-15 | Quản lý Sản phẩm (CRUD) | Web Admin (`frontend-admin`) |
 | D | FR-02 | Đăng nhập & Khóa tài khoản (Mobile) | Mobile (Expo, `frontend-mobile`) |
 
-> Pool D trùng FR với Pool A theo xác nhận cho phép của giảng viên ngày [ngày] ([nguồn: email/forum]).
-
 ## 2. Nội dung bài nộp
 
 | File / thư mục | Nội dung |
@@ -41,8 +39,8 @@
 | C (FR-15) | Domain | 8 | 8 | 3 | 5 | 0 |
 | C (FR-15) | BVA | 7 | 7 | 5 | 2 | 0 |
 | D (FR-02 Mobile) | Domain | 6 | 6 | 2 | 4 | 0 |
-| D (FR-02 Mobile) | BVA | 4 | 3 | 2 | 1 | 1 |
-| **Tổng** | | **66** | **65** | **38** | **27** | **1** |
+| D (FR-02 Mobile) | BVA | 4 | 4 | 2 | 2 | 0 |
+| **Tổng** | | **66** | **66** | **38** | **28** | **0** |
 
 **Số bug theo mức độ:**
 
@@ -51,7 +49,7 @@
 | A (FR-02) | 0 | 1 | 3 | 2 | 6 |
 | B (FR-09) | 2 | 0 | 2 | 0 | 4 |
 | C (FR-15) | 1 | 1 | 1 | 1 | 4 |
-| D (FR-02 Mobile) | 0 | 0 | 1 | 1 | 2 (+ B001 tái lập từ Feature A) |
+| D (FR-02 Mobile) | 0 | 0 | 1 | 1 | 2 (+ B001, B002 tái lập từ Feature A) |
 | **Tổng** | **3** | **2** | **7** | **4** | **16 bug ID duy nhất** |
 
 ## 4. Demo video (Agent Skill)
@@ -71,4 +69,4 @@
 | 5 | Agent Skills | 10 | [10 sau khi có video demo] |
 | | **Total** | **100** | **[điền sau khi có video]** |
 
-**Tên file nộp:** `23127183_HW02_AI_DomainTesting_[điểm 3 chữ số].zip`
+**Tên file nộp:** `23127183_HW02_AI_DomainTesting_100.zip`
